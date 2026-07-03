@@ -1,2500 +1,1576 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SSR思锐求职 · 资深行业求职导师团</title>
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap');
-  * { margin:0; padding:0; box-sizing:border-box; }
-  :root {
-    --bg: #f5f6fa; --card-bg: #fff; --text: #1a1a2e; --text-secondary: #5a5a7a;
-    --text-muted: #9090a8; --border: #e8ecf1;
-    --primary: #f07830; --primary-light: #fff7ed; --primary-dark: #d4621a;
-    --purple: #6018a8; --purple-light: #f5f0ff; --purple-dark: #3d0f6e;
-    --accent: #f07830; --accent-light: #fff7ed;
-    --gold: #f59e0b; --gold-bg: #fffbeb;
-    --red: #ef4444; --red-bg: #fef2f2;
-    --green: #10b981; --green-bg: #ecfdf5;
-    --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
-    --shadow-hover: 0 10px 25px rgba(0,0,0,0.08), 0 4px 10px rgba(0,0,0,0.04);
-    --radius: 16px;
-  }
-  body { font-family: 'Noto Sans SC', 'Inter', -apple-system, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; -webkit-font-smoothing: antialiased; }
-  .watermark { position: fixed; inset: 0; z-index: 9999; pointer-events: none; overflow: hidden; }
-  .watermark::before { content: ''; position: absolute; inset: -100%; width: 300%; height: 300%; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Ctext x='150' y='150' text-anchor='middle' dominant-baseline='middle' transform='rotate(-45 150 150)' font-size='15' fill='%23666' opacity='0.12' font-family='sans-serif'%3ESSR%E6%80%9D%E9%94%90%E5%92%A8%E8%AF%A2%E2%84%A2%3C/text%3E%3C/svg%3E"); background-repeat: repeat; background-size: 300px 300px; }
-  .header { background: linear-gradient(160deg, #1a0533 0%, #2d0b5e 25%, #1e1040 50%, #0f172a 100%); color: #fff; padding: 70px 0 60px; text-align: center; position: relative; overflow: hidden; }
-  .header::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(ellipse at 30% 50%, rgba(240,120,48,0.12) 0%, transparent 50%), radial-gradient(ellipse at 70% 60%, rgba(96,24,168,0.15) 0%, transparent 50%); }
-  .header-logo { position: relative; z-index: 1; margin-bottom: 4px; }
-  .header-logo img { height: 154px; }
-  .header h1 { position: relative; z-index: 1; font-size: 2.6rem; font-weight: 800; letter-spacing: 1px; display: flex; flex-direction: column; align-items: center; gap: 8px; }
-  .header h1 .line1 { font-size: 1.6rem; font-weight: 500; letter-spacing: 6px; color: #f07830; text-transform: uppercase; }
-  .header h1 .line2 { font-size: 2.2rem; background: linear-gradient(135deg, #f07830 30%, #fbbf24 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-  .header p.header-subtitle { position: relative; z-index: 1; font-size: 0.95rem; color: #a78bfa; margin-top: 24px; max-width: 720px; margin-left: auto; margin-right: auto; line-height: 1.7; }
-  .header-stats { display: flex; justify-content: center; gap: 48px; margin-top: 32px; position: relative; z-index: 1; }
-  .header-stat { text-align: center; }
-  .header-stat .num { font-size: 2.4rem; font-weight: 800; color: #f07830; }
-  .header-stat .label { font-size: 0.85rem; color: #a78bfa; margin-top: 4px; }
-  .container { max-width: 1400px; margin: 0 auto; padding: 0 28px; }
-  .nav-wrapper { position: sticky; top: 0; z-index: 100; background: rgba(245,246,250,0.92); backdrop-filter: blur(12px); padding: 14px 0; }
-  .nav-tabs { display: flex; flex-wrap: wrap; gap: 8px; background: #fff; padding: 10px; border-radius: var(--radius); box-shadow: var(--shadow); max-width: 1400px; margin: 0 auto; overflow-x: auto; }
-  .nav-tab { padding: 10px 18px; border-radius: 22px; font-size: 0.88rem; font-weight: 500; cursor: pointer; border: 1.5px solid transparent; background: transparent; color: var(--text-secondary); transition: all 0.2s; white-space: nowrap; font-family: inherit; }
-  .nav-tab:hover { background: var(--primary-light); color: var(--primary); border-color: rgba(240,120,48,0.2); }
-  .nav-tab.active { background: linear-gradient(135deg, #f07830, #e06820); color: #fff; border-color: transparent; }
-  .section { margin: 44px 0; }
-  .section-header { display: flex; align-items: center; gap: 14px; margin-bottom: 28px; padding-bottom: 14px; border-bottom: 2px solid var(--border); }
-  .section-icon { width: 46px; height: 46px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }
-  .section-title { font-size: 1.5rem; font-weight: 700; }
-  .section-count { font-size: 0.85rem; color: var(--text-muted); background: var(--bg); padding: 4px 14px; border-radius: 20px; font-weight: 500; }
-  .mentor-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); gap: 20px; }
-  .mentor-card { background: var(--card-bg); border-radius: var(--radius); padding: 28px; box-shadow: var(--shadow); transition: all 0.3s ease; border: 1px solid transparent; display: flex; flex-direction: column; }
-  .mentor-card:hover { box-shadow: var(--shadow-hover); border-color: rgba(240,120,48,0.2); transform: translateY(-2px); }
-  .card-top { display: flex; gap: 18px; align-items: flex-start; margin-bottom: 18px; }
-  .avatar { width: 68px; height: 68px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; font-weight: 700; color: #fff; }
-  .avatar.female { background: linear-gradient(135deg, #f59e0b, #f07830); }
-  .avatar.male { background: linear-gradient(135deg, #6018a8, #8b5cf6); }
-  .card-info { flex: 1; min-width: 0; }
-  .card-name { font-size: 1.15rem; font-weight: 700; margin-bottom: 2px; display: flex; align-items: center; gap: 6px; }
-  .card-name .badge-vip { font-size: 0.68rem; background: linear-gradient(135deg, #f07830, #fbbf24); color: #fff; padding: 2px 8px; border-radius: 10px; font-weight: 600; }
-  .card-title { font-size: 0.85rem; color: var(--accent); font-weight: 500; margin-bottom: 4px; }
-  .card-school { font-size: 0.82rem; color: var(--text-secondary); display: flex; align-items: center; gap: 4px; }
-  .card-stats { display: flex; gap: 10px; margin: 10px 0; flex-wrap: wrap; }
-  .stat-item { display: flex; align-items: center; gap: 4px; font-size: 0.78rem; color: var(--text-muted); background: var(--bg); padding: 4px 10px; border-radius: 20px; }
-  .stat-item .stat-val { font-weight: 600; color: var(--text); }
-  .card-companies { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0; }
-  .company-tag { font-size: 0.77rem; padding: 4px 10px; border-radius: 20px; font-weight: 500; }
-  .company-tag.big-tech { background: #fef2f2; color: #dc2626; }
-  .company-tag.foreign { background: var(--purple-light); color: var(--purple); }
-  .company-tag.finance { background: var(--gold-bg); color: #d97706; }
-  .company-tag.soe { background: #fef3c7; color: #b45309; }
-  .company-tag.startup { background: var(--green-bg); color: #059669; }
-  .company-tag.consulting { background: #fdf2f8; color: #be185d; }
-  .card-desc { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.65; margin-top: 6px; flex: 1; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
-  .card-desc strong { color: var(--text); }
-  .card-industry { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 14px; }
-  .industry-tag { font-size: 0.72rem; padding: 3px 10px; border-radius: 12px; background: var(--primary-light); color: var(--primary-dark); font-weight: 500; }
-  .footer { text-align: center; padding: 44px 0; color: var(--text-muted); font-size: 0.85rem; border-top: 1px solid var(--border); margin-top: 48px; }
-  .footer .brand { font-weight: 700; color: var(--primary); font-size: 1.2rem; margin-bottom: 6px; }
-  .footer .footer-sub { font-size: 0.9rem; font-weight: 600; letter-spacing: 3px; color: var(--purple); margin-bottom: 10px; }
-  .footer .footer-slogan { font-size: 0.95rem; color: var(--text-secondary); font-weight: 500; margin-bottom: 12px; }
-  .mentor-card { animation: fadeInUp 0.5s ease both; }
-  @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-  .mentor-card:nth-child(1) { animation-delay: 0.05s; } .mentor-card:nth-child(2) { animation-delay: 0.1s; }
-  .mentor-card:nth-child(3) { animation-delay: 0.15s; } .mentor-card:nth-child(4) { animation-delay: 0.2s; }
-  .mentor-card:nth-child(5) { animation-delay: 0.25s; } .mentor-card:nth-child(6) { animation-delay: 0.3s; }
-  .mentor-card:nth-child(7) { animation-delay: 0.35s; }
-  @media (max-width: 900px) { .mentor-grid { grid-template-columns: 1fr; } .header h1 .line2 { font-size: 1.6rem; } .header-stats { gap: 24px; } .header-stat .num { font-size: 1.8rem; } }
-  @media (max-width: 500px) { .card-top { flex-direction: column; align-items: center; text-align: center; } .card-companies { justify-content: center; } .nav-tab { padding: 8px 12px; font-size: 0.78rem; } }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SSR思锐求职 | 全流程求职陪跑</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <style>
+        :root {
+            --orange: #F7931E;
+            --orange-light: #FFF3E0;
+            --orange-dark: #E07C00;
+            --purple: #6B2D8E;
+            --purple-light: #F3E5F5;
+            --purple-dark: #4A1C63;
+            --text: #1F1F1F;
+            --text-secondary: #555555;
+            --bg: #FFFFFF;
+            --bg-warm: #FFFBF5;
+            --border: #E8E8E8;
+            --shadow: 0 12px 32px rgba(107, 45, 142, 0.10);
+            --shadow-orange: 0 12px 32px rgba(247, 147, 30, 0.14);
+            --radius: 20px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
+            color: var(--text);
+            background: var(--bg);
+            line-height: 1.75;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        img {
+            max-width: 100%;
+            display: block;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1120px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Header */
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .header-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 72px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo img {
+            height: 42px;
+            width: auto;
+        }
+
+        .nav {
+            display: flex;
+            gap: 24px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+
+        .nav a:hover {
+            color: var(--orange);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 28px;
+            border-radius: 999px;
+            font-weight: 600;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--orange) 0%, var(--orange-dark) 100%);
+            color: #fff;
+            box-shadow: 0 6px 18px rgba(247, 147, 30, 0.32);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 24px rgba(247, 147, 30, 0.40);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--purple);
+            border: 2px solid var(--purple);
+        }
+
+        .btn-outline:hover {
+            background: var(--purple);
+            color: #fff;
+        }
+
+        /* Hero */
+        .hero {
+            position: relative;
+            padding: 100px 0 120px;
+            background: linear-gradient(135deg, rgba(247,147,30,0.92) 0%, rgba(107,45,142,0.92) 100%),
+                        url("./pdf_images/page1_img1_(540x157px).png");
+            background-size: cover, cover;
+            background-position: center, center;
+            color: #fff;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.28);
+            z-index: 0;
+        }
+
+        .hero > .container {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero .hero-inner {
+            position: relative;
+            z-index: 1;
+            max-width: 720px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .hero h1 {
+            font-size: 56px;
+            line-height: 1.15;
+            font-weight: 800;
+            margin-bottom: 24px;
+            letter-spacing: -0.02em;
+        }
+
+        .hero-logo-img {
+            height: 140px;
+            width: auto;
+            display: inline-block;
+            margin-bottom: 8px;
+            filter: brightness(0) invert(1);
+        }
+
+        .hero h1 .highlight {
+            position: relative;
+            display: inline-block;
+        }
+
+        .hero h1 .highlight::after {
+            content: '';
+            position: absolute;
+            bottom: 6px;
+            left: 0;
+            width: 100%;
+            height: 12px;
+            background: rgba(255, 255, 255, 0.25);
+            border-radius: 4px;
+            z-index: -1;
+        }
+
+        .hero-subtitle {
+            font-size: 20px;
+            line-height: 1.7;
+            opacity: 0.95;
+            margin: 0 auto 36px;
+            max-width: 520px;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .hero-actions .btn-primary {
+            background: #fff;
+            color: var(--purple);
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+        }
+
+        .hero-actions .btn-primary:hover {
+            background: var(--orange-light);
+        }
+
+        .hero-actions .btn-outline {
+            border-color: #fff;
+            color: #fff;
+        }
+
+        .hero-actions .btn-outline:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .hero-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-top: 56px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            backdrop-filter: blur(8px);
+        }
+
+        .stat-card .number {
+            font-size: 32px;
+            font-weight: 800;
+            line-height: 1;
+            margin-bottom: 6px;
+        }
+
+        .stat-card .label {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        /* Section */
+        .section {
+            padding: 100px 0;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 64px;
+        }
+
+        .section-title h2 {
+            font-size: 40px;
+            font-weight: 800;
+            margin-bottom: 16px;
+            color: var(--text);
+        }
+
+        .section-title p {
+            font-size: 18px;
+            color: var(--text-secondary);
+            max-width: 640px;
+            margin: 0 auto;
+        }
+
+        .section-title .eyebrow {
+            display: inline-block;
+            color: var(--orange);
+            font-weight: 700;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 12px;
+        }
+
+        /* Services */
+        .services {
+            background: var(--bg-warm);
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 28px;
+        }
+
+        .pricing-card {
+            background: #fff;
+            border-radius: var(--radius);
+            padding: 36px 28px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            position: relative;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-orange);
+        }
+
+        .pricing-card.featured {
+            border: 2px solid var(--orange);
+            transform: scale(1.02);
+        }
+
+        .pricing-card.featured:hover {
+            transform: scale(1.02) translateY(-8px);
+        }
+
+        .pricing-badge {
+            position: absolute;
+            top: -14px;
+            right: 20px;
+            background: var(--purple);
+            color: #fff;
+            padding: 6px 14px;
+            border-radius: 999px;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .pricing-name {
+            font-size: 24px;
+            font-weight: 800;
+            margin-bottom: 8px;
+            color: var(--text);
+        }
+
+        .pricing-desc {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+            min-height: 42px;
+        }
+
+        .pricing-price {
+            font-size: 42px;
+            font-weight: 900;
+            color: var(--orange);
+            margin-bottom: 8px;
+            line-height: 1;
+        }
+
+        .pricing-price span {
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-left: 4px;
+        }
+
+        .pricing-period {
+            font-size: 15px;
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+            padding-bottom: 24px;
+            border-bottom: 1px dashed var(--border);
+        }
+
+        .pricing-features {
+            list-style: none;
+            margin-bottom: 28px;
+            flex: 1;
+        }
+
+        .pricing-features li {
+            padding: 10px 0;
+            font-size: 14px;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            border-bottom: 1px solid #f5f5f5;
+        }
+
+        .pricing-features li::before {
+            content: '✓';
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 20px;
+            height: 20px;
+            min-width: 20px;
+            background: var(--orange-light);
+            color: var(--orange);
+            border-radius: 50%;
+            font-size: 12px;
+            font-weight: 700;
+            margin-top: 2px;
+        }
+
+        .pricing-features li .note {
+            color: var(--orange);
+            font-weight: 600;
+        }
+
+        /* Selection Guide */
+        .guide-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 28px;
+        }
+
+        .guide-card {
+            background: #fff;
+            border: 2px solid var(--border);
+            border-radius: var(--radius);
+            padding: 32px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .guide-card:hover {
+            border-color: var(--purple);
+            transform: translateY(-4px);
+            box-shadow: var(--shadow);
+        }
+
+        .guide-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--orange), var(--purple));
+        }
+
+        .guide-number {
+            font-size: 48px;
+            font-weight: 900;
+            color: var(--orange);
+            opacity: 0.2;
+            line-height: 1;
+            margin-bottom: 12px;
+        }
+
+        .guide-card h3 {
+            font-size: 20px;
+            font-weight: 800;
+            margin-bottom: 12px;
+        }
+
+        .guide-card p {
+            font-size: 15px;
+            color: var(--text-secondary);
+        }
+
+        .guide-cta {
+            text-align: center;
+            margin-top: 48px;
+            padding: 32px;
+            background: var(--purple-light);
+            border-radius: var(--radius);
+        }
+
+        .guide-cta p {
+            font-size: 17px;
+            color: var(--purple-dark);
+            margin-bottom: 16px;
+        }
+
+        /* Why Us */
+        .why-us {
+            background: linear-gradient(180deg, var(--purple-light) 0%, #fff 100%);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 28px;
+        }
+
+        .feature-card {
+            background: #fff;
+            border-radius: var(--radius);
+            padding: 36px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+        }
+
+        .feature-icon {
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, var(--orange) 0%, var(--purple) 100%);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 26px;
+            margin-bottom: 20px;
+        }
+
+        .feature-card h3 {
+            font-size: 22px;
+            font-weight: 800;
+            margin-bottom: 12px;
+        }
+
+        .feature-card p {
+            font-size: 15px;
+            color: var(--text-secondary);
+        }
+
+        /* Process */
+        .process-steps {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 32px;
+            position: relative;
+        }
+
+        .process-step {
+            background: #fff;
+            border-radius: var(--radius);
+            padding: 36px 28px;
+            box-shadow: var(--shadow);
+            border-top: 5px solid var(--orange);
+            position: relative;
+        }
+
+        .process-step:nth-child(2) {
+            border-top-color: var(--purple);
+        }
+
+        .process-step:nth-child(3) {
+            border-top-color: var(--orange-dark);
+        }
+
+        .step-badge {
+            width: 48px;
+            height: 48px;
+            background: var(--orange-light);
+            color: var(--orange);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: 900;
+            margin-bottom: 20px;
+        }
+
+        .process-step:nth-child(2) .step-badge {
+            background: var(--purple-light);
+            color: var(--purple);
+        }
+
+        .process-step h3 {
+            font-size: 22px;
+            font-weight: 800;
+            margin-bottom: 16px;
+        }
+
+        .process-step ul {
+            list-style: none;
+        }
+
+        .process-step li {
+            padding: 8px 0;
+            font-size: 15px;
+            color: var(--text-secondary);
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .process-step li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 17px;
+            width: 8px;
+            height: 8px;
+            background: var(--orange);
+            border-radius: 50%;
+        }
+
+        /* Service Scenes */
+        .service-scenes {
+            background: #fff;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+        }
+
+        .gallery-card {
+            background: #fff;
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+
+        .gallery-card:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-orange);
+        }
+
+        .gallery-card img {
+            width: 100%;
+            height: 260px;
+            object-fit: cover;
+            object-position: top;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .gallery-card .caption {
+            padding: 22px 24px;
+        }
+
+        .gallery-card .caption h4 {
+            font-size: 18px;
+            font-weight: 800;
+            margin-bottom: 6px;
+            color: var(--text);
+        }
+
+        .gallery-card .caption p {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* Growth Data */
+        .growth-section {
+            background: linear-gradient(180deg, var(--bg-warm) 0%, #fff 100%);
+        }
+
+        .growth-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 48px;
+            align-items: center;
+        }
+
+        .growth-chart {
+            background: #fff;
+            border-radius: var(--radius);
+            padding: 24px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+        }
+
+        .growth-chart img {
+            width: 100%;
+            border-radius: 12px;
+        }
+
+        .growth-text h3 {
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 20px;
+            line-height: 1.3;
+        }
+
+        .growth-text p {
+            font-size: 16px;
+            color: var(--text-secondary);
+            margin-bottom: 18px;
+        }
+
+        .growth-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin-top: 28px;
+        }
+
+        .growth-stat {
+            background: #fff;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.04);
+            border-left: 4px solid var(--orange);
+        }
+
+        .growth-stat .number {
+            font-size: 28px;
+            font-weight: 900;
+            color: var(--orange);
+            margin-bottom: 4px;
+        }
+
+        .growth-stat .label {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        /* Success Stories */
+        .success-stories {
+            background: #1a1a2e;
+            color: #fff;
+        }
+
+        .success-stories .section-title h2,
+        .success-stories .section-title p {
+            color: #fff;
+        }
+
+        .success-stories .eyebrow {
+            color: var(--orange);
+        }
+
+        .masonry-grid {
+            column-count: 3;
+            column-gap: 20px;
+        }
+
+        .masonry-item {
+            break-inside: avoid;
+            margin-bottom: 20px;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+            transition: transform 0.3s ease;
+        }
+
+        .masonry-item:hover {
+            transform: translateY(-4px);
+        }
+
+        .masonry-item img {
+            width: 100%;
+            display: block;
+        }
+
+        /* FAQ */
+        .faq {
+            background: var(--bg-warm);
+        }
+
+        .faq-list {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            background: #fff;
+            border-radius: 16px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+            overflow: hidden;
+        }
+
+        .faq-question {
+            padding: 22px 28px;
+            font-size: 17px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .faq-question:hover {
+            color: var(--orange);
+        }
+
+        .faq-question .icon {
+            width: 28px;
+            height: 28px;
+            background: var(--orange-light);
+            color: var(--orange);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            transition: transform 0.3s ease;
+        }
+
+        .faq-item.active .icon {
+            transform: rotate(45deg);
+            background: var(--orange);
+            color: #fff;
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .faq-item.active .faq-answer {
+            max-height: 500px;
+        }
+
+        .faq-answer p {
+            padding: 0 28px 24px;
+            font-size: 15px;
+            color: var(--text-secondary);
+        }
+
+        /* About */
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .about-text h2 {
+            font-size: 36px;
+            font-weight: 800;
+            margin-bottom: 24px;
+            line-height: 1.3;
+        }
+
+        .about-text p {
+            font-size: 16px;
+            color: var(--text-secondary);
+            margin-bottom: 18px;
+        }
+
+        .about-highlight {
+            background: linear-gradient(135deg, var(--orange-light) 0%, var(--purple-light) 100%);
+            border-radius: var(--radius);
+            padding: 28px;
+            margin-top: 28px;
+            border-left: 4px solid var(--orange);
+        }
+
+        .about-highlight p {
+            margin-bottom: 0;
+            color: var(--text);
+            font-weight: 500;
+        }
+
+        .about-visual {
+            background: linear-gradient(135deg, var(--orange) 0%, var(--purple) 100%);
+            border-radius: var(--radius);
+            padding: 40px;
+            color: #fff;
+            text-align: center;
+            box-shadow: var(--shadow);
+        }
+
+        .about-visual img {
+            width: 90%;
+            margin: 0 auto 24px;
+            filter: brightness(0) invert(1);
+        }
+
+        .about-visual h3 {
+            font-size: 24px;
+            font-weight: 800;
+            margin-bottom: 16px;
+        }
+
+        .about-visual p {
+            opacity: 0.95;
+            font-size: 15px;
+        }
+
+        /* CTA */
+        .cta {
+            background: linear-gradient(135deg, var(--purple) 0%, var(--purple-dark) 100%);
+            color: #fff;
+            text-align: center;
+            padding: 100px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+
+        .cta h2 {
+            font-size: 42px;
+            font-weight: 800;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .cta p {
+            font-size: 18px;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto 36px;
+            position: relative;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-top: 40px;
+            position: relative;
+            flex-wrap: wrap;
+        }
+
+        .social-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            padding: 12px 24px;
+            border-radius: 999px;
+            font-size: 15px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .social-link:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-2px);
+        }
+
+        /* Footer */
+        .footer {
+            background: #1a1a2e;
+            color: rgba(255,255,255,0.7);
+            padding: 48px 0;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .footer-brand {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .footer-brand img {
+            height: 36px;
+            filter: brightness(0) invert(1);
+        }
+
+        .footer-brand span {
+            font-size: 20px;
+            font-weight: 800;
+            color: #fff;
+        }
+
+        /* Mobile */
+        @media (max-width: 992px) {
+            .hero-inner,
+            .about-content,
+            .growth-content {
+                grid-template-columns: 1fr;
+            }
+
+            .pricing-grid,
+            .guide-grid,
+            .process-steps,
+            .gallery-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .masonry-grid {
+                column-count: 2;
+            }
+
+            .hero h1 {
+                font-size: 42px;
+            }
+
+            .section-title h2 {
+                font-size: 32px;
+            }
+
+            .nav {
+                display: none;
+            }
+
+            .hero-stats {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .masonry-grid {
+                column-count: 1;
+            }
+        }
+            .hero {
+                padding: 70px 0 90px;
+            }
+
+            .section {
+                padding: 70px 0;
+            }
+
+            .hero h1 {
+                font-size: 34px;
+            }
+
+            .hero-subtitle {
+                font-size: 17px;
+            }
+
+            .pricing-card.featured {
+                transform: none;
+            }
+
+            .cta h2 {
+                font-size: 30px;
+            }
+        }
+    </style>
 </head>
 <body>
 
-<div class="watermark"></div>
+    <!-- Header -->
+    <header class="header">
+        <div class="container header-inner">
+            <a href="#" class="logo">
+                <img src="./logo/logo.png" alt="SSR 思锐求职">
+            </a>
+            <nav class="nav">
+            <a href="#about">关于我们</a>
+                <a href="#services">服务方案</a>
+                <a href="#guide">选课指南</a>
+                <a href="#scenes">真实场景</a>
+                <a href="#mentors">导师团队</a>
+                <a href="#process">陪跑流程</a>
+                <a href="#stories">成功案例</a>
+                <a href="#faq">常见问题</a>
+            </nav>
+            <a href="#contact" class="btn btn-primary">立即咨询</a>
+        </div>
+    </header>
 
-<div class="header">
-  <div class="header-logo">
-    <img src="logo.png" alt="SSR思锐咨询" onerror="this.style.display='none'">
-  </div>
-  <h1><span class="line2">资深行业求职导师团</span></h1>
-  <div class="header-stats">
-    <div class="header-stat"><div class="num">200+</div><div class="label">资深导师</div></div>
-    <div class="header-stat"><div class="num">20+</div><div class="label">行业赛道</div></div>
-    <div class="header-stat"><div class="num">1000+</div><div class="label">累计服务客户</div></div>
-    <div class="header-stat"><div class="num">12年</div><div class="label">平均从业年限</div></div>
-  </div>
-  <p class="header-subtitle">汇聚金融、科技、医药、新能源、人工智能等核心赛道的顶尖实战专家<br>（以下仅列出部分）</p>
-</div>
+    <!-- Hero -->
+    <section class="hero" id="hero">
+        <div class="container hero-inner">
+            <div class="hero-content">
+                <h1><img src="./logo/logo.png" alt="SSR思锐求职" class="hero-logo-img"><br>让每一份<span class="highlight">职业理想</span>都落地</h1>
+                <p class="hero-subtitle">不卖流水线网课，只集中解决你自己的职场问题。从职业定位到 Offer 谈判，导师 1V1 定制化陪跑，助你斩获远超预期的优质 Offer。</p>
+                <div class="hero-actions">
+                    <a href="#services" class="btn btn-primary">查看服务方案</a>
+                    <a href="#contact" class="btn btn-outline">预约 1V1 评估</a>
+                </div>
+                <div class="hero-stats">
+                    <div class="stat-card">
+                        <div class="number">1000+</div>
+                        <div class="label">上岸学员</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="number">100+</div>
+                        <div class="label">名企在职团队</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="number">3</div>
+                        <div class="label">大阶段陪跑体系</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-<div class="nav-wrapper">
-  <div class="nav-tabs" id="navTabs">
-    <button class="nav-tab active" data-section="all">全部导师</button>
-    <button class="nav-tab" data-section="finance">💰 金融科技</button>
-    <button class="nav-tab" data-section="tech">💻 互联网科技</button>
-    <button class="nav-tab" data-section="pharma">🧬 生物医药</button>
-    <button class="nav-tab" data-section="supply">📦 供应链采购</button>
-    <button class="nav-tab" data-section="hr">👥 人力资源</button>
-    <button class="nav-tab" data-section="marketing">📣 品牌营销电商</button>
-    <button class="nav-tab" data-section="auto">🚗 汽车智能制造</button>
-    <button class="nav-tab" data-section="consulting">🏢 管理咨询</button>
-    <button class="nav-tab" data-section="ai">🤖 人工智能</button>
-    <button class="nav-tab" data-section="semiconductor">🔬 半导体集成电路</button>
-    <button class="nav-tab" data-section="cybersec">🔒 网络安全</button>
-    <button class="nav-tab" data-section="lowalt">🚁 低空经济</button>
-    <button class="nav-tab" data-section="hightech_mfg">🏭 高端智能制造</button>
-    <button class="nav-tab" data-section="aerospace">🚀 航空航天</button>
-    <button class="nav-tab" data-section="pe_fund">📊 私募证券基金</button>
-    <button class="nav-tab" data-section="synbio">🧪 合成生物</button>
-    <button class="nav-tab" data-section="cloud_data">☁️ 云计算大数据</button>
-    <button class="nav-tab" data-section="newenergy">⚡ 新能源双碳</button>
-  </div>
-</div>
+    <!-- About -->
+    <section class="section" id="about">
+        <div class="container">
+            <div class="about-content">
+                <div class="about-text">
+                    <div class="eyebrow">About Us</div>
+                    <h2>做有温度且理性的求职引路人</h2>
+                    <p>创立 SSR 职业咨询的初衷，源于我们自己曾真切走过的那些弯路。</p>
+                    <p>作为曾经的文科与天坑医学生，我们深知在竞争激烈的市场中寻找优质机会的局限与迷茫；作为职场人，我们也遭遇过极度消耗身心的有毒环境，面对过充满 PUA 的上下级关系。在那些因为想离职而陷入 Gap 空窗期的日子里，焦虑感如影随形。当时最强烈的渴望，就是希望能有一位真正懂行业、懂业务的前辈，能拉自己一把，指引一个清晰的方向。</p>
+                    <p>正因为淋过雨，所以想为别人撑伞。我们整合了自身在外企大厂多年的实战经验，搭建了 SSR 这个平台。截至目前，我们已经帮助了超过 1000 名同学精准避坑，不仅为他们节省了宝贵的试错时间，更协助他们拿到了远超自身预期的优质 Offer。</p>
+                    <div class="about-highlight">
+                        <p>求职是一场商业价值的精准匹配，我们希望用最专业的操盘逻辑，做你职场路上最可靠的合伙人。</p>
+                    </div>
+                </div>
+                <div class="about-visual">
+                    <img src="./logo/logo.png" alt="SSR 思锐求职">
+                    <h3>SUPER SUCCESS RESULTS</h3>
+                    <p>1000+ 上岸学员 · 100+ 名企在职团队 · 全流程求职陪跑</p>
+                </div>
+            </div>
+        </div>
+    </section>
 
-<div class="container">
+    <!-- Services -->
+    <section class="section services" id="services">
+        <div class="container">
+            <div class="section-title">
+                <div class="eyebrow">Service Plans</div>
+                <h2>SSR思锐求职 服务方案</h2>
+                <p>针对不同求职阶段与需求，提供三种陪跑计划，帮助你找到最适合自己的上岸节奏。</p>
+            </div>
+            <div class="pricing-grid">
+                <!-- Plan 1 -->
+                <div class="pricing-card">
+                    <div class="pricing-name">实习冲刺计划</div>
+                    <div class="pricing-desc">目标明确、已有一定简历基础，正处于面试流程中，需要短平快实战突破。</div>
+                    <div class="pricing-price">¥6,800</div>
+                    <div class="pricing-period">服务周期：2 个月</div>
+                    <ul class="pricing-features">
+                        <li>职业规划与投递策略 <span class="note">无限次</span></li>
+                        <li>1V1 导师定制课 <span class="note">4 课时</span></li>
+                        <li>决胜 Offer 护航 <span class="note">无限次</span></li>
+                        <li>简历精修 <span class="note">1 类岗位</span></li>
+                        <li>校招专属信息库</li>
+                        <li>定制化岗位推荐 <span class="note">1 类岗位</span></li>
+                        <li>私域社群答疑</li>
+                    </ul>
+                    <a href="#contact" class="btn btn-outline" style="width:100%">了解详情</a>
+                </div>
 
-<!-- ============ 金融科技 ============ -->
-<div class="section" data-category="finance">
-  <div class="section-header">
-    <div class="section-icon" style="background:#fff7ed;">💰</div>
-    <div class="section-title">金融科技</div>
-  </div>
-  <div class="mentor-grid">
-    <div class="mentor-card">
-      <div class="card-top">
-        <div class="avatar male">C</div>
-        <div class="card-info">
-          <div class="card-name">Catherine Chen <span class="badge-vip">首席导师</span></div>
-          <div class="card-title">CFO / 投融资副总裁</div>
-          <div class="card-school"><span class="school-icon">🎓</span> 美国奥克拉荷马大学 · 经济学硕士</div>
-        </div>
-      </div>
-      <div class="card-stats">
-        <div class="stat-item">📅 <span class="stat-val">19年</span>从业</div>
-        <div class="stat-item"><span class="stat-val">1000亿+管理规模</span></div><div class="stat-item"><span class="stat-val">400+投资者网络</span></div>
-      </div>
-      <div class="card-companies">
-        <span class="company-tag foreign">华尔街投行</span><span class="company-tag foreign">外资跨国财团</span><span class="company-tag foreign">美港股上市科技</span>
-      </div>
-      <div class="card-desc">
-        十八年美国华尔街投资银行、外资大型跨国财团、上市金融科技公司高管经验。深度主导A至Pre-IPO轮股权融资、港美股A股IPO上市、并购等资本运作，年融资管理规模超<strong>1000亿</strong>，覆盖400+境内外投资者。
-      </div>
-      <div class="card-industry">
-        <span class="industry-tag">投行</span><span class="industry-tag">PE/VC</span><span class="industry-tag">IPO</span><span class="industry-tag">跨境并购</span>
-      </div>
-    </div>
-    <div class="mentor-card">
-      <div class="card-top">
-        <div class="avatar male">L</div>
-        <div class="card-info">
-          <div class="card-name">Leo 李先生</div>
-          <div class="card-title">指数产品经理 / 量化策略专家</div>
-          <div class="card-school"><span class="school-icon">🎓</span> 约翰霍普金斯大学 · 金融学硕士</div>
-        </div>
-      </div>
-      <div class="card-stats">
-        <div class="stat-item">📅 <span class="stat-val">6年</span>从业</div>
-        <div class="stat-item"><span class="stat-val">JHU全球Top10</span></div><div class="stat-item"><span class="stat-val">量化指数策略</span></div>
-      </div>
-      <div class="card-companies">
-        <span class="company-tag soe">金融央企</span><span class="company-tag foreign">量化研究</span>
-      </div>
-      <div class="card-desc">
-        约翰霍普金斯大学金融硕士，具备股票、债券及多资产指数全品类编制能力，精通机器学习、多因子模型与高频数据处理。前中后台全流程指数产品经验，掌握<strong>MATLAB、R、Python</strong>等量化编程工具。
-      </div>
-      <div class="card-industry">
-        <span class="industry-tag">量化金融</span><span class="industry-tag">指数产品</span><span class="industry-tag">机器学习</span>
-      </div>
-    </div>
-    <div class="mentor-card">
-      <div class="card-top">
-        <div class="avatar male">D</div>
-        <div class="card-info">
-          <div class="card-name">Danny 徐先生 <span class="badge-vip">首席导师</span></div>
-          <div class="card-title">融资租赁战略转型专家</div>
-          <div class="card-school"><span class="school-icon">🎓</span> 英国帝国理工学院 · 物理硕士</div>
-        </div>
-      </div>
-      <div class="card-stats">
-        <div class="stat-item">📅 <span class="stat-val">12年</span>从业</div>
-        <div class="stat-item"><span class="stat-val">帝国理工全球Top10</span></div><div class="stat-item"><span class="stat-val">5年+团队管理</span></div>
-      </div>
-      <div class="card-companies">
-        <span class="company-tag foreign">平安国际融资租赁</span><span class="company-tag foreign">现代融资租赁（现代集团）</span><span class="company-tag foreign">易鑫融资租赁</span>
-      </div>
-      <div class="card-desc">
-        帝国理工学院硕士，10年以上融资租赁经验。主导平安租赁乘用车、商用车、小微金融、经营性租赁等业务<strong>从0到1体系搭建</strong>。精通Python、Power BI、AI大模型赋能数据分析与战略决策。
-      </div>
-      <div class="card-industry">
-        <span class="industry-tag">融资租赁</span><span class="industry-tag">风险管理</span><span class="industry-tag">战略转型</span><span class="industry-tag">科技金融</span>
-      </div>
-    </div>
-  </div>
-</div>
+                <!-- Plan 2 -->
+                <div class="pricing-card featured">
+                    <div class="pricing-badge">热门推荐</div>
+                    <div class="pricing-name">全程无忧计划</div>
+                    <div class="pricing-desc">有一定实习经历但规划尚不清晰，需要全流程辅导与长期系统投递策略。</div>
+                    <div class="pricing-price">¥12,800</div>
+                    <div class="pricing-period">服务周期：6 个月</div>
+                    <ul class="pricing-features">
+                        <li>职业规划与投递策略 <span class="note">无限次</span></li>
+                        <li>1V1 导师定制课 <span class="note">8 课时</span></li>
+                        <li>决胜 Offer 护航 <span class="note">无限次</span></li>
+                        <li>入职辅导</li>
+                        <li>简历精修 <span class="note">高管级·无限制</span></li>
+                        <li>校招专属信息库</li>
+                        <li>定制化岗位推荐 <span class="note">无限制</span></li>
+                        <li>私域社群答疑</li>
+                        <li>求职进度与质量品控</li>
+                    </ul>
+                    <a href="#contact" class="btn btn-primary" style="width:100%">立即咨询</a>
+                </div>
 
-<!-- ============ 互联网科技 ============ -->
-<div class="section" data-category="tech">
-  <div class="section-header">
-    <div class="section-icon" style="background:#eff6ff;">💻</div>
-    <div class="section-title">互联网科技</div>
-  </div>
-  <div class="mentor-grid">
-    <div class="mentor-card">
-      <div class="card-top">
-        <div class="avatar male">M</div>
-        <div class="card-info">
-          <div class="card-name">Martin 杨先生 <span class="badge-vip">首席导师</span></div>
-          <div class="card-title">JVM内核工程师 / OpenJDK贡献者</div>
-          <div class="card-school"><span class="school-icon">🎓</span> 乌普萨拉大学 · 计算机科学博士</div>
+                <!-- Plan 3 -->
+                <div class="pricing-card">
+                    <div class="pricing-name">管家式尊享计划</div>
+                    <div class="pricing-desc">零对口实习、跨专业求职或求职壁垒较高，需要保姆级多方向全流程深度护航。</div>
+                    <div class="pricing-price">¥25,800</div>
+                    <div class="pricing-period">服务周期：12 个月</div>
+                    <ul class="pricing-features">
+                        <li>职业规划与投递策略 <span class="note">无限次</span></li>
+                        <li>1V1 导师定制课 <span class="note">无限次</span></li>
+                        <li>决胜 Offer 护航 <span class="note">无限次</span></li>
+                        <li>入职辅导 <span class="note">含前 90 天避坑</span></li>
+                        <li>简历精修 <span class="note">高管级·无限制</span></li>
+                        <li>校招专属信息库</li>
+                        <li>定制化岗位推荐 <span class="note">无限制</span></li>
+                        <li>私域社群答疑 <span class="note">加急语音</span></li>
+                        <li>管家式全程护航</li>
+                        <li>求职进度与质量品控</li>
+                    </ul>
+                    <a href="#contact" class="btn btn-outline" style="width:100%">了解详情</a>
+                </div>
+            </div>
         </div>
-      </div>
-      <div class="card-stats">
-        <div class="stat-item">📅 <span class="stat-val">5年</span>从业</div>
-        <div class="stat-item"><span class="stat-val">博士计算机</span></div><div class="stat-item"><span class="stat-val">OpenJDK贡献者</span></div>
-      </div>
-      <div class="card-companies">
-        <span class="company-tag big-tech">Oracle</span><span class="company-tag big-tech">Google (实习)</span><span class="company-tag big-tech">Microsoft (实习)</span>
-      </div>
-      <div class="card-desc">
-        乌普萨拉大学计算机科学博士，<strong>OpenJDK JVM核心贡献者</strong>，深耕Serial/Parallel/G1 GC垃圾回收器。曾于Google、Microsoft Research实习，目前就职于Oracle从事底层系统软件开发。
-      </div>
-      <div class="card-industry">
-        <span class="industry-tag">JVM</span><span class="industry-tag">系统软件</span><span class="industry-tag">C++</span><span class="industry-tag">开源</span>
-      </div>
-    </div>
-    <div class="mentor-card">
-      <div class="card-top">
-        <div class="avatar female">I</div>
-        <div class="card-info">
-          <div class="card-name">Iris 杨女士</div>
-          <div class="card-title">数据分析总监 / 商业分析专家</div>
-          <div class="card-school"><span class="school-icon">🎓</span> 北京师范大学 · 应用心理学硕士 + 佛罗里达大学硕士</div>
-        </div>
-      </div>
-      <div class="card-stats">
-        <div class="stat-item">📅 <span class="stat-val">15年</span>从业</div>
-        <div class="stat-item"><span class="stat-val">BAT背景</span></div><div class="stat-item"><span class="stat-val">美国Top50硕士</span></div>
-      </div>
-      <div class="card-companies">
-        <span class="company-tag big-tech">腾讯</span><span class="company-tag foreign">爱奇艺</span><span class="company-tag foreign">墨迹天气</span>
-      </div>
-      <div class="card-desc">
-        BAT背景，美国Top50大学双硕士，10年以上数据分析与市场研究经验。曾任<strong>墨迹天气数据分析总监、爱奇艺商业分析经理、腾讯资深商业分析</strong>，擅长经营分析、用户研究、AB测试与战略决策支持。
-      </div>
-      <div class="card-industry">
-        <span class="industry-tag">数据分析</span><span class="industry-tag">商业分析</span><span class="industry-tag">用户研究</span><span class="industry-tag">战略规划</span>
-      </div>
-    </div>
-    <div class="mentor-card">
-      <div class="card-top">
-        <div class="avatar male">A</div>
-        <div class="card-info">
-          <div class="card-name">Aiden 韩先生</div>
-          <div class="card-title">AI产品专家 / 国际化增长策略</div>
-          <div class="card-school"><span class="school-icon">🎓</span> 名校背景</div>
-        </div>
-      </div>
-      <div class="card-stats">
-        <div class="stat-item">📅 <span class="stat-val">资深</span>从业</div>
-        <div class="stat-item"><span class="stat-val">AI Agent方向</span></div><div class="stat-item"><span class="stat-val">国际化经验</span></div>
-      </div>
-      <div class="card-companies">
-        <span class="company-tag big-tech">携程Trip.com</span><span class="company-tag foreign">同程旅行</span>
-      </div>
-      <div class="card-desc">
-        深耕AI产品与国际化增长，主导<strong>AI Agent驱动的广告效能诊断、AIGC内容生成优化</strong>及Vibe Coding敏捷开发。在携程Trip.com通过AI优化将广告跳出率降低25%，在同程通过AI Agent将客诉下降60%。
-      </div>
-      <div class="card-industry">
-        <span class="industry-tag">AI产品</span><span class="industry-tag">增长策略</span><span class="industry-tag">国际化</span><span class="industry-tag">AIGC</span>
-      </div>
-    </div>
-  </div>
-</div>
+    </section>
 
-<!-- ============ 生物医药 ============ -->
-<div class="section" data-category="pharma">
-  <div class="section-header">
-    <div class="section-icon" style="background:#ecfdf5;">🧬</div>
-    <div class="section-title">生物医药</div>
-  </div>
-  <div class="mentor-grid">
-    <div class="mentor-card">
-      <div class="card-top">
-        <div class="avatar female">S</div>
-        <div class="card-info">
-          <div class="card-name">Sharon 李女士</div>
-          <div class="card-title">医药战略咨询 / PMO专家</div>
-          <div class="card-school"><span class="school-icon">🎓</span> 伦敦艺术大学 · 设计管理硕士</div>
+    <!-- Selection Guide -->
+    <section class="section" id="guide">
+        <div class="container">
+            <div class="section-title">
+                <div class="eyebrow">Selection Guide</div>
+                <h2>哪一款计划最适合你？</h2>
+                <p>求职没有标准答案，只有基于你自身基本盘的战略最优解。</p>
+            </div>
+            <div class="guide-grid">
+                <div class="guide-card">
+                    <div class="guide-number">01</div>
+                    <h3>实习冲刺计划</h3>
+                    <p>如果你只是想小试实习投递，目标明确、已有一定简历基础，且目前正处于面试流程中。亟需针对高频考点、真实业务面或终面进行短平快的全真模拟与实战冲刺辅导。</p>
+                </div>
+                <div class="guide-card">
+                    <div class="guide-number">02</div>
+                    <h3>全程无忧计划</h3>
+                    <p>如果你需要全流程辅导。有一定过往实习经历，但职业规划尚不清晰。需要导师全流程辅导，包括补充行业及岗位专业知识、精修简历、面试辅导，并提供长期的系统投递策略。</p>
+                </div>
+                <div class="guide-card">
+                    <div class="guide-number">03</div>
+                    <h3>管家式尊享计划</h3>
+                    <p>如果你需要保姆级多方向全流程辅导。零对口实习经验跨专业求职、希望长线探索多个职业方向，面临较高的求职壁垒，需要最高频的深度辅导、全方位的陪伴护航以及入职后的托底指导。</p>
+                </div>
+            </div>
+            <div class="guide-cta">
+                <p>如果你看完依然纠结，带上你的最新简历，直接联系我们的求职助理。SSR 的战略导师会为你进行一次客观的 1V1 预评估，为你指明更具可行性的落地路径。</p>
+                <a href="#contact" class="btn btn-primary">预约 1V1 评估</a>
+            </div>
         </div>
-      </div>
-      <div class="card-stats">
-        <div class="stat-item">📅 <span class="stat-val">9年</span>从业</div>
-        <div class="stat-item"><span class="stat-val">5+战略项目</span></div><div class="stat-item"><span class="stat-val">千万级预算管理</span></div>
-      </div>
-      <div class="card-companies">
-        <span class="company-tag foreign">朗石战略咨询</span><span class="company-tag foreign">GSK 葛兰素史克</span><span class="company-tag foreign">康希诺生物</span>
-      </div>
-      <div class="card-desc">
-        生物医药领域战略咨询与战略市场双重经验，服务朗石战略咨询，为<strong>金石亚药、斯利安、达霏欣、诺特兰德</strong>等头部企业提供战略规划。曾于康希诺主导四价流脑疫苗上市，<strong>实现从0到5亿销售额突破</strong>。
-      </div>
-      <div class="card-industry">
-        <span class="industry-tag">战略咨询</span><span class="industry-tag">医药营销</span><span class="industry-tag">PMO</span><span class="industry-tag">市场洞察</span>
-      </div>
-    </div>
-    <div class="mentor-card">
-      <div class="card-top">
-        <div class="avatar male">R</div>
-        <div class="card-info">
-          <div class="card-name">Ray 李先生</div>
-          <div class="card-title">临床运营管理专家</div>
-          <div class="card-school"><span class="school-icon">🎓</span> 南京中医药大学 · 药学本科</div>
-        </div>
-      </div>
-      <div class="card-stats">
-        <div class="stat-item">📅 <span class="stat-val">13年</span>从业</div>
-        <div class="stat-item"><span class="stat-val">30+CRA团队</span></div><div class="stat-item"><span class="stat-val">多次绩效A</span></div>
-      </div>
-      <div class="card-companies">
-        <span class="company-tag foreign">强生Johnson & Johnson</span><span class="company-tag foreign">康德弘翼</span><span class="company-tag foreign">FMD</span>
-      </div>
-      <div class="card-desc">
-        近7年CRA从业+6年临床管理经验，覆盖血液瘤、乳腺癌、前列腺癌、COPD、糖尿病及心血管等<strong>肿瘤与非肿瘤多领域</strong>。管理30+CRA团队，留任率与产出东部第一，培养出4位LM和2位PM。
-      </div>
-      <div class="card-industry">
-        <span class="industry-tag">临床运营</span><span class="industry-tag">CRA管理</span><span class="industry-tag">GCP</span><span class="industry-tag">肿瘤研究</span>
-      </div>
-    </div>
-    <div class="mentor-card">
-      <div class="card-top">
-        <div class="avatar female">E</div>
-        <div class="card-info">
-          <div class="card-name">Emily 杨女士</div>
-          <div class="card-title">医药战略准入 / 新药上市</div>
-          <div class="card-school"><span class="school-icon">🎓</span> 苏黎世联邦理工学院 · 生物工程硕士</div>
-        </div>
-      </div>
-      <div class="card-stats">
-        <div class="stat-item">📅 <span class="stat-val">新锐</span>从业</div>
-        <div class="stat-item"><span class="stat-val">ETH全球QS前10</span></div><div class="stat-item"><span class="stat-val">三语中英日</span></div>
-      </div>
-      <div class="card-companies">
-        <span class="company-tag foreign">礼来Lilly</span><span class="company-tag foreign">辉瑞Pfizer</span><span class="company-tag foreign">IQVIA 艾昆纬</span><span class="company-tag finance">中信建投证券</span>
-      </div>
-      <div class="card-desc">
-        苏黎世联邦理工学院（QS全球前10）生物技术硕士，现任<strong>礼来准入战略管培生</strong>。曾于辉瑞中央市场部、IQVIA管理咨询、中信建投行研实习，精通新产品上市策略（NPP）、NRDL谈判、药品定价策略。英语TOEFL 110、日语N1。
-      </div>
-      <div class="card-industry">
-        <span class="industry-tag">市场准入</span><span class="industry-tag">新药上市</span><span class="industry-tag">战略规划</span><span class="industry-tag">管理咨询</span>
-      </div>
-    </div>
-    <div class="mentor-card">
-      <div class="card-top">
-        <div class="avatar female">L</div>
-        <div class="card-info">
-          <div class="card-name">Lynn 林女士</div>
-          <div class="card-title">医学经理 / 医药市场推广</div>
-          <div class="card-school"><span class="school-icon">🎓</span> 中国医科大学 · 临床医学本科</div>
-        </div>
-      </div>
-      <div class="card-stats">
-        <div class="stat-item">📅 <span class="stat-val">9年</span>从业</div>
-        <div class="stat-item"><span class="stat-val">19%市占提升</span></div><div class="stat-item"><span class="stat-val">医生+患者双端管理</span></div>
-      </div>
-      <div class="card-companies">
-        <span class="company-tag foreign">艾尔建Allergan</span><span class="company-tag foreign">智云健康</span><span class="company-tag foreign">Ipsen项目</span>
-      </div>
-      <div class="card-desc">
-        临床医学专业出身，深耕医药产品市场推广。负责<strong>达菲林</strong>等重磅产品的市场医学工作，通过规范诊疗和数字化患者管理，实现产品全年<strong>19%市场份额增长</strong>。曾于艾尔建负责保妥适、玻尿酸等美学产品学术推广。
-      </div>
-      <div class="card-industry">
-        <span class="industry-tag">医学事务</span><span class="industry-tag">产品推广</span><span class="industry-tag">KOL管理</span><span class="industry-tag">数字化医疗</span>
-      </div>
-    </div>
-    <div class="mentor-card">
-      <div class="card-top">
-        <div class="avatar male">C</div>
-        <div class="card-info">
-          <div class="card-name">Charles 褚先生</div>
-          <div class="card-title">IVD研发项目经理 / 分子诊断专家</div>
-          <div class="card-school"><span class="school-icon">🎓</span> 上海生物制品研究所 · 病原生物学硕士</div>
-        </div>
-      </div>
-      <div class="card-stats">
-        <div class="stat-item">📅 <span class="stat-val">9年</span>从业</div>
-        <div class="stat-item"><span class="stat-val">qPCR多平台</span></div><div class="stat-item"><span class="stat-val">CE/MDSAP体系</span></div>
-      </div>
-      <div class="card-companies">
-        <span class="company-tag foreign">康黎诊断</span>
-      </div>
-      <div class="card-desc">
-        病原生物学硕士，深耕IVD分子诊断领域。精通<strong>qPCR、多重熔解曲线、等温扩增（LAMP/RPA）、CRISPR、核酸质谱、tNGS</strong>等多技术平台。有GMP实验室建设及CE、MDSAP、NAMPA体系下产品从零到获批的完整经验。
-      </div>
-      <div class="card-industry">
-        <span class="industry-tag">IVD研发</span><span class="industry-tag">分子诊断</span><span class="industry-tag">注册申报</span><span class="industry-tag">GMP</span>
-      </div>
-    </div>
-    <div class="mentor-card">
-      <div class="card-top">
-        <div class="avatar female">T</div>
-        <div class="card-info">
-          <div class="card-name">Tina 陶女士</div>
-          <div class="card-title">跨国药企资深招聘专家</div>
-          <div class="card-school"><span class="school-icon">🎓</span> 上海政法学院 · 法学本科</div>
-        </div>
-      </div>
-      <div class="card-stats">
-        <div class="stat-item">📅 <span class="stat-val">15年</span>从业</div>
-        <div class="stat-item"><span class="stat-val">外资药企招聘</span></div>
-      </div>
-      <div class="card-companies">
-        <span class="company-tag foreign">勃林格殷格翰</span><span class="company-tag foreign">凯西医药</span>
-      </div>
-      <div class="card-desc">
-        深耕医药行业招聘15年，现就职于<strong>勃林格殷格翰（BI）</strong>，负责市场、地区经理、销售等核心岗位招聘。此前在凯西医药积累丰富的外资药企招聘经验，深谙跨国药企人才标准和面试逻辑。
-      </div>
-      <div class="card-industry">
-        <span class="industry-tag">医药招聘</span><span class="industry-tag">外资药企</span><span class="industry-tag">人才评估</span>
-      </div>
-    </div>
-  </div>
-</div>
+    </section>
 
-<!-- ============ 供应链采购 ============ -->
-<div class="section" data-category="supply">
-  <div class="section-header">
-    <div class="section-icon" style="background:#f5f3ff;">📦</div>
-    <div class="section-title">供应链采购</div>
-  </div>
-  <div class="mentor-grid">
-    <div class="mentor-card">
-      <div class="card-top">
-        <div class="avatar male">A</div>
-        <div class="card-info">
-          <div class="card-name">Anakin 张先生 <span class="badge-vip">首席导师</span></div>
-          <div class="card-title">端到端供应链管理专家</div>
-          <div class="card-school"><span class="school-icon">🎓</span> 上海海洋大学 · 经济管理本科</div>
+    <!-- Why Us -->
+    <section class="section why-us" id="why">
+        <div class="container">
+            <div class="section-title">
+                <div class="eyebrow">Why SSR思锐求职</div>
+                <h2>为什么选择 SSR思锐求职？</h2>
+                <p>我们不卖流水线网课，只集中解决你自己的职场问题。</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">1</div>
+                    <h3>全部课程均为定制化 1V1 私教</h3>
+                    <p>我们不卖标准化的流水线录播课，不提供泛泛而谈的通用攻略。从职业方向定位、到 HR 面试、业务经理面试、高管终面以及每一次复盘，都是围绕你的过往经历、目标岗位以及面试官偏好进行的高深度、高颗粒度定制辅导。</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">2</div>
+                    <h3>每周精准匹配岗位，拒绝无效海投</h3>
+                    <p>在服务期内，我们根据你的定制方向，每周提供经过人工筛选的高匹配度岗位信息。帮你跳出信息茧房，把精力集中在转化率最高的机会上（适用于无忧及尊享计划）。</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">3</div>
+                    <h3>深度盘点，挖掘你的差异化优势</h3>
+                    <p>我们不仅帮你优化简历和面试话术，更深度挖掘你过往经历中的隐藏亮点与高含金量数据，将你的底层能力精准翻译为目标行业 HR 认可的通用业务价值。</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">4</div>
+                    <h3>不仅为了 Offer，更培养终身受益的业务逻辑</h3>
+                    <p>我们教给你的不仅是面试话术，而是一套完整的行业认知框架与商业拆解能力。这套能力不仅能帮你通过面试，更能支撑你在入职后的试用期顺利 Landing、在未来的述职与晋升中持续获益。</p>
+                </div>
+            </div>
         </div>
-      </div>
-      <div class="card-stats">
-        <div class="stat-item">📅 <span class="stat-val">16年</span>从业</div>
-        <div class="stat-item"><span class="stat-val">奢侈品+化工跨界</span></div><div class="stat-item"><span class="stat-val">中国+亚太区域</span></div>
-      </div>
-      <div class="card-companies">
-        <span class="company-tag foreign">Richemont 历峰集团</span><span class="company-tag foreign">De Beers 戴比尔斯</span><span class="company-tag big-tech">Amazon 亚马逊</span><span class="company-tag foreign">IKEA 宜家</span>
-      </div>
-      <div class="card-desc">
-        15+年端到端供应链物流管理经验，曾服务于<strong>历峰集团（卡地亚）、戴比尔斯、亚马逊、宜家</strong>等全球知名企业。精通选品、需求计划、供应计划、库存优化、进出口关务及跨境电商。在戴比尔斯主导整体供应链体系搭建，将预测准确率从6%提升至80%。
-      </div>
-      <div class="card-industry">
-        <span class="industry-tag">供应链管理</span><span class="industry-tag">奢侈品</span><span class="industry-tag">跨境电商</span><span class="industry-tag">SAP</span>
-      </div>
-    </div>
-    <div class="mentor-card">
-      <div class="card-top">
-        <div class="avatar male">S</div>
-        <div class="card-info">
-          <div class="card-name">Steven 孙先生</div>
-          <div class="card-title">亚太区品类采购经理</div>
-          <div class="card-school"><span class="school-icon">🎓</span> 大连外国语学院 · 英语本科</div>
-        </div>
-      </div>
-      <div class="card-stats">
-        <div class="stat-item">📅 <span class="stat-val">18年</span>从业</div>
-        <div class="stat-item"><span class="stat-val">亚太区采购管理</span></div><div class="stat-item"><span class="stat-val">$1.4M成本节省</span></div>
-      </div>
-      <div class="card-companies">
-        <span class="company-tag foreign">Stanley 史丹利</span><span class="company-tag foreign">Philips 飞利浦</span><span class="company-tag foreign">Johnson & Johnson 强生</span><span class="company-tag consulting">Accenture 埃森哲</span>
-      </div>
-      <div class="card-desc">
-        10年以上专业采购及品类管理经验，曾服务于<strong>飞利浦、强生、埃森哲、史丹利</strong>等全球500强。主导亚太区所有国家间接品类采购，涵盖MRO、设施、资本支出、HR及市场营销等，累计实现<strong>$1.4M成本优化</strong>。
-      </div>
-      <div class="card-industry">
-        <span class="industry-tag">战略采购</span><span class="industry-tag">品类管理</span><span class="industry-tag">供应商管理</span><span class="industry-tag">成本优化</span>
-      </div>
-    </div>
-    <div class="mentor-card">
-      <div class="card-top">
-        <div class="avatar female">S</div>
-        <div class="card-info">
-          <div class="card-name">Sophia 徐女士</div>
-          <div class="card-title">供应链总监 / 物流运营专家</div>
-          <div class="card-school"><span class="school-icon">🎓</span> 同济大学 · MBA</div>
-        </div>
-      </div>
-      <div class="card-stats">
-        <div class="stat-item">📅 <span class="stat-val">24年</span>从业</div>
-        <div class="stat-item"><span class="stat-val">财务+物流复合型</span></div><div class="stat-item"><span class="stat-val">SAP S4实施经验</span></div>
-      </div>
-      <div class="card-companies">
-        <span class="company-tag foreign">Amer Sports 亚玛芬</span><span class="company-tag foreign">ECCO 爱步</span><span class="company-tag foreign">Church & Dwight</span>
-      </div>
-      <div class="card-desc">
-        同济大学MBA，24年多行业物流管理经验。曾管理<strong>始祖鸟（Arc'Teryx）、萨洛蒙（Salomon）、Wilson</strong>等品牌的全国仓储运输。作为Order to Cash流程负责人完成SAP S4 HANA从0到1搭建。
-      </div>
-      <div class="card-industry">
-        <span class="industry-tag">物流运营</span><span class="industry-tag">SAP</span><span class="industry-tag">3PL管理</span><span class="industry-tag">供应链规划</span>
-      </div>
-    </div>
-  </div>
-</div>
+    </section>
 
-<!-- ============ 人力资源 ============ -->
-<div class="section" data-category="hr">
-  <div class="section-header">
-    <div class="section-icon" style="background:#fef2f2;">👥</div>
-    <div class="section-title">人力资源</div>
-  </div>
-  <div class="mentor-grid">
-    <div class="mentor-card">
-      <div class="card-top">
-        <div class="avatar female">S</div>
-        <div class="card-info">
-          <div class="card-name">Sherry 谢女士 <span class="badge-vip">首席导师</span></div>
-          <div class="card-title">人力资源高级总监 / CHRO</div>
-          <div class="card-school"><span class="school-icon">🎓</span> 东华大学 · 法学本科</div>
+    <!-- Service Scenes -->
+    <section class="section service-scenes" id="scenes">
+        <div class="container">
+            <div class="section-title">
+                <div class="eyebrow">Real Scenes</div>
+                <h2>服务真实场景</h2>
+                <p>从岗位筛选、简历打磨到模拟面试与 Offer 决策，每一步都有真实交付与记录。</p>
+            </div>
+            <div class="gallery-grid">
+                <div class="gallery-card">
+                    <img src="./pdf_images/page3_img2_(356x180px).png" alt="定制化岗位推荐">
+                    <div class="caption">
+                        <h4>定制化岗位推荐</h4>
+                        <p>根据你的目标方向与背景匹配度，人工筛选高价值岗位，拒绝无效海投。</p>
+                    </div>
+                </div>
+                <div class="gallery-card">
+                    <img src="./pdf_images/page3_img3_(240x169px).png" alt="简历精修对比">
+                    <div class="caption">
+                        <h4>简历精修前后对比</h4>
+                        <p>从信息堆砌到价值翻译，让同一份经历在 HR 眼中展现更高含金量。</p>
+                    </div>
+                </div>
+                <div class="gallery-card">
+                    <img src="./pdf_images/page3_img1_(255x169px).jpeg" alt="1V1 模拟面试">
+                    <div class="caption">
+                        <h4>1V1 模拟面试实录</h4>
+                        <p>针对目标岗位定制 Case 与面试问题，真实还原业务面与高管终面场景。</p>
+                    </div>
+                </div>
+                <div class="gallery-card">
+                    <img src="./pdf_images/page4_img1_(294x134px).jpeg" alt="Offer 综合评估">
+                    <div class="caption">
+                        <h4>Offer 综合评估与决策</h4>
+                        <p>从行业前景、岗位通用性、长期路径等维度帮你理性选择最优 Offer。</p>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
-      <div class="card-stats">
-        <div class="stat-item">📅 <span class="stat-val">25年</span>从业</div>
-        <div class="stat-item"><span class="stat-val">HR一号位全职能</span></div><div class="stat-item"><span class="stat-val">英语流利跨国管理</span></div>
-      </div>
-      <div class="card-companies">
-        <span class="company-tag foreign">Sonova 索诺瓦</span>
-      </div>
-      <div class="card-desc">
-        跨国公司HR一号位，25年人力资源全职能管理经验。曾任<strong>索诺瓦（Sonova）中国区人力资源高级总监</strong>，直接汇报全球CHRO。擅长组织转型与变革管理、并购整合、人才发展、文化建设及SAP全流程上线项目。
-      </div>
-      <div class="card-industry">
-        <span class="industry-tag">HR战略</span><span class="industry-tag">组织变革</span><span class="industry-tag">人才发展</span><span class="industry-tag">跨国管理</span>
-      </div>
-    </div>
-    <div class="mentor-card">
-      <div class="card-top">
-        <div class="avatar female">W</div>
-        <div class="card-info">
-          <div class="card-name">Wendy 王女士</div>
-          <div class="card-title">HR全模块专家 / 生命科学行业</div>
-          <div class="card-school"><span class="school-icon">🎓</span> University of Canberra · MBA</div>
-        </div>
-      </div>
-      <div class="card-stats">
-        <div class="stat-item">📅 <span class="stat-val">22年</span>从业</div>
-        <div class="stat-item"><span class="stat-val">生物+半导体跨界</span></div><div class="stat-item"><span class="stat-val">0-1体系搭建</span></div>
-      </div>
-      <div class="card-companies">
-        <span class="company-tag foreign">跨国生命科学外企</span><span class="company-tag foreign">医疗器械上市公司</span><span class="company-tag foreign">半导体初创公司</span><span class="company-tag foreign">邦睿咨询</span>
-      </div>
-      <div class="card-desc">
-        近20年HR经验，包括<strong>10年跨国生命科学及医疗器械外企上市公司经验</strong>。精通HR全模块及最佳实践，具备人力资源全模块体系从0至1搭建管理经验。熟悉产销研一体化管理。
-      </div>
-      <div class="card-industry">
-        <span class="industry-tag">HR全模块</span><span class="industry-tag">生命科学</span><span class="industry-tag">医疗器械</span><span class="industry-tag">0-1体系</span>
-      </div>
-    </div>
-    <div class="mentor-card">
-      <div class="card-top">
-        <div class="avatar female">G</div>
-        <div class="card-info">
-          <div class="card-name">Grace 金女士</div>
-          <div class="card-title">亚太区HR负责人 / 盖洛普优势教练</div>
-          <div class="card-school"><span class="school-icon">🎓</span> 华东理工大学 · MBA</div>
-        </div>
-      </div>
-      <div class="card-stats">
-        <div class="stat-item">📅 <span class="stat-val">22年</span>从业</div>
-        <div class="stat-item"><span class="stat-val">亚太区HR管理</span></div><div class="stat-item"><span class="stat-val">盖洛普认证教练</span></div>
-      </div>
-      <div class="card-companies">
-        <span class="company-tag foreign">必布奇自动化</span><span class="company-tag foreign">高科技行业</span>
-      </div>
-      <div class="card-desc">
-        20年高科技行业HR管理，10+年团队管理经验。曾任<strong>亚太区人力资源经理</strong>，管理中国大陆、香港、台湾、日本、韩国、新加坡、澳大利亚等地区HR全模块运营。<strong>盖洛普全球认证优势教练</strong>。
-      </div>
-      <div class="card-industry">
-        <span class="industry-tag">亚太HR</span><span class="industry-tag">教练技术</span><span class="industry-tag">盖洛普优势</span><span class="industry-tag">领导力</span>
-      </div>
-    </div>
-    <div class="mentor-card">
-      <div class="card-top">
-        <div class="avatar female">M</div>
-        <div class="card-info">
-          <div class="card-name">Melody 梁女士</div>
-          <div class="card-title">亚太区学习与人才发展专家</div>
-          <div class="card-school"><span class="school-icon">🎓</span> University of Toronto · 成人教育学硕士</div>
-        </div>
-      </div>
-      <div class="card-stats">
-        <div class="stat-item">📅 <span class="stat-val">12年</span>从业</div>
-        <div class="stat-item"><span class="stat-val">亚太区培训</span></div><div class="stat-item"><span class="stat-val">DDI+FC认证</span></div>
-      </div>
-      <div class="card-companies">
-        <span class="company-tag soe">跨国企业（亚太）</span>
-      </div>
-      <div class="card-desc">
-        10年以上亚太区域学习与人才发展经验，中英文双语专业人士。<strong>DDI认证引导师、FranklinCovey认证讲师</strong>，擅长从业务目标出发设计领导力及关键能力发展方案。一年内将员工自愿参与类项目参与率提升50%。
-      </div>
-      <div class="card-industry">
-        <span class="industry-tag">人才发展</span><span class="industry-tag">领导力培训</span><span class="industry-tag">DDI</span><span class="industry-tag">课程设计</span>
-      </div>
-    </div>
-    <div class="mentor-card">
-      <div class="card-top">
-        <div class="avatar female">J</div>
-        <div class="card-info">
-          <div class="card-name">Joy 赵女士</div>
-          <div class="card-title">国企HRD / 干部管理专家</div>
-          <div class="card-school"><span class="school-icon">🎓</span> 华东师范大学 · 教育学硕士</div>
-        </div>
-      </div>
-      <div class="card-stats">
-        <div class="stat-item">📅 <span class="stat-val">15年</span>从业</div>
-        <div class="stat-item"><span class="stat-val">世界500强央企+国企</span></div><div class="stat-item"><span class="stat-val">干部管理专长</span></div>
-      </div>
-      <div class="card-companies">
-        <span class="company-tag soe">上海临港控股</span><span class="company-tag soe">世界500强央企</span>
-      </div>
-      <div class="card-desc">
-        中共党员，华东师范大学硕士。历任事业单位、<strong>世界500强央企、上海市属国企</strong>，在干部管理监督、招聘、培训、绩效、工会方面经验丰富。擅长迅速猎聘关键岗位人才及<strong>人才培养体系搭建、晋升体系设计</strong>。
-      </div>
-      <div class="card-industry">
-        <span class="industry-tag">干部管理</span><span class="industry-tag">国企HR</span><span class="industry-tag">人才体系</span><span class="industry-tag">组织发展</span>
-      </div>
-    </div>
-    <div class="mentor-card">
-      <div class="card-top">
-        <div class="avatar female">L</div>
-        <div class="card-info">
-          <div class="card-name">Lena 连女士</div>
-          <div class="card-title">HR共享服务专家 / 流程优化</div>
-          <div class="card-school"><span class="school-icon">🎓</span> 上海交通大学 · 商务英语本科</div>
-        </div>
-      </div>
-      <div class="card-stats">
-        <div class="stat-item">📅 <span class="stat-val">25年</span>从业</div>
-        <div class="stat-item"><span class="stat-val">0-1 SSC搭建</span></div><div class="stat-item"><span class="stat-val">英语流利外企背景</span></div>
-      </div>
-      <div class="card-companies">
-        <span class="company-tag foreign">长鑫存储</span>
-      </div>
-      <div class="card-desc">
-        上海交通大学毕业，资深培训专家。精通<strong>HRSS（人力资源共享服务）全流程管控</strong>，拥有成功的属地化落地实施经验。多年外资企业背景，英语流利。核心主导上海共享服务中心的建立。
-      </div>
-      <div class="card-industry">
-        <span class="industry-tag">HR共享服务</span><span class="industry-tag">流程优化</span><span class="industry-tag">人才政策</span><span class="industry-tag">HRIS</span>
-      </div>
-    </div>
-  </div>
-</div>
+    </section>
 
-<!-- ============ 品牌营销电商 ============ -->
-<div class="section" data-category="marketing">
-  <div class="section-header">
-    <div class="section-icon" style="background:#fdf2f8;">📣</div>
-    <div class="section-title">品牌营销电商</div>
-  </div>
-  <div class="mentor-grid">
-    <div class="mentor-card">
-      <div class="card-top">
-        <div class="avatar female">C</div>
-        <div class="card-info">
-          <div class="card-name">Coco 秦女士 <span class="badge-vip">首席导师</span></div>
-          <div class="card-title">奢侈品品牌营销总监</div>
-          <div class="card-school"><span class="school-icon">🎓</span> 香港大学 · 整合营销硕士</div>
+    <!-- Process -->
+    <section class="section" id="process">
+        <div class="container">
+            <div class="section-title">
+                <div class="eyebrow">Process</div>
+                <h2>陪跑全流程：三大阶段</h2>
+                <p>从诊断到拿满最优 Offer，每一步动作都有清晰的交付与预期管理。</p>
+            </div>
+            <div class="process-steps">
+                <div class="process-step">
+                    <div class="step-badge">01</div>
+                    <h3>诊断与定位</h3>
+                    <p style="color: var(--text-secondary); margin-bottom: 16px; font-size: 15px;">帮助你精准定位，差异化竞争。</p>
+                    <ul>
+                        <li>1V1 全维度背景盘点</li>
+                        <li>深度挖掘过往经历中的隐藏亮点</li>
+                        <li>锁定 Target 行业与核心公司</li>
+                        <li>科学规避赛道雷区</li>
+                        <li>定制职业规划与投递策略</li>
+                    </ul>
+                </div>
+                <div class="process-step">
+                    <div class="step-badge">02</div>
+                    <h3>赋能与备战</h3>
+                    <p style="color: var(--text-secondary); margin-bottom: 16px; font-size: 15px;">帮助你系统提升面试表现，实现自信表达。</p>
+                    <ul>
+                        <li>1V1 面试特训</li>
+                        <li>基于独家 STAR 原则框架</li>
+                        <li>覆盖 HR 面 / AI 面 / AC 面 / 业务主管面 / 大 Boss 面</li>
+                        <li>全真模拟与 Case 深度辅导</li>
+                        <li>高颗粒度表现复盘与改进建议</li>
+                    </ul>
+                </div>
+                <div class="process-step">
+                    <div class="step-badge">03</div>
+                    <h3>收割与启航</h3>
+                    <p style="color: var(--text-secondary); margin-bottom: 16px; font-size: 15px;">帮助你利益最大化，顺利 Landing。</p>
+                    <ul>
+                        <li>Offer 综合评估与理性决策</li>
+                        <li>客观评估 Market Value</li>
+                        <li>战略性薪资谈判话术指导</li>
+                        <li>争取更多溢价空间</li>
+                        <li>前 90 天入职避坑指导（尊享计划）</li>
+                    </ul>
+                </div>
+            </div>
         </div>
-      </div>
-      <div class="card-stats">
-        <div class="stat-item">📅 <span class="stat-val">14年</span>从业</div>
-        <div class="stat-item"><span class="stat-val">奢侈品深耕</span></div><div class="stat-item"><span class="stat-val">全渠道运营</span></div>
-      </div>
-      <div class="card-companies">
-        <span class="company-tag foreign">Chanel 香奈儿</span><span class="company-tag foreign">Sephora 丝芙兰</span><span class="company-tag foreign">Coach 蔻驰</span><span class="company-tag foreign">雅萌等品牌</span>
-      </div>
-      <div class="card-desc">
-        香港大学整合营销硕士，5年以上销售分析+品牌营销复合背景。曾服务于<strong>香奈儿、丝芙兰、蔻驰</strong>等国际奢侈品牌，熟悉美妆、珠宝、奢侈品全渠道运作。独立主导新店、快闪店、VIP沙龙、跨界联名及大型展会。
-      </div>
-      <div class="card-industry">
-        <span class="industry-tag">奢侈品</span><span class="industry-tag">品牌营销</span><span class="industry-tag">全渠道</span><span class="industry-tag">活动策划</span>
-      </div>
-    </div>
-    <div class="mentor-card">
-      <div class="card-top">
-        <div class="avatar male">J</div>
-        <div class="card-info">
-          <div class="card-name">Jay 泰先生</div>
-          <div class="card-title">跨境电商运营经理</div>
-          <div class="card-school"><span class="school-icon">🎓</span> 硕士学历</div>
-        </div>
-      </div>
-      <div class="card-stats">
-        <div class="stat-item">📅 <span class="stat-val">7年</span>从业</div>
-        <div class="stat-item"><span class="stat-val">30%+年复合增长</span></div><div class="stat-item"><span class="stat-val">跨平台全渠道</span></div>
-      </div>
-      <div class="card-companies">
-        <span class="company-tag finance">Shopee</span><span class="company-tag foreign">雀巢Nestlé</span><span class="company-tag foreign">美赞臣Mead Johnson</span><span class="company-tag foreign">汤臣倍健</span>
-      </div>
-      <div class="card-desc">
-        多年跨境与国内电商运营及渠道管理经验，服务<strong>京东/天猫/唯品会/抖音/Shopee/酷澎</strong>等平台。在Shopee、雀巢、美赞臣、汤臣倍健积累丰富消费品运营经验，成功推动多个品牌成为<strong>行业TOP1，GMV年增速30%+</strong>。
-      </div>
-      <div class="card-industry">
-        <span class="industry-tag">跨境电商</span><span class="industry-tag">电商运营</span><span class="industry-tag">全渠道</span><span class="industry-tag">P&L管理</span>
-      </div>
-    </div>
-    <div class="mentor-card">
-      <div class="card-top">
-        <div class="avatar female">Q</div>
-        <div class="card-info">
-          <div class="card-name">Queenie 钱女士</div>
-          <div class="card-title">电商运营专家 / 美妆医疗双赛道</div>
-          <div class="card-school"><span class="school-icon">🎓</span> 西南政法大学 · 新闻学本科</div>
-        </div>
-      </div>
-      <div class="card-stats">
-        <div class="stat-item">📅 <span class="stat-val">9年</span>从业</div>
-        <div class="stat-item"><span class="stat-val">美妆+大健康跨赛道</span></div><div class="stat-item"><span class="stat-val">TP+甲方复合经验</span></div>
-      </div>
-      <div class="card-companies">
-        <span class="company-tag foreign">电商平台</span><span class="company-tag foreign">美妆品牌</span><span class="company-tag foreign">医疗大健康</span>
-      </div>
-      <div class="card-desc">
-        重点大学背景，深耕电商行业，<strong>美妆与医疗大健康跨赛道经验</strong>，兼具TP服务商与品牌甲方复合视角。擅长市场通路规划、电商运营策略与品牌增长，有带团队经验。
-      </div>
-      <div class="card-industry">
-        <span class="industry-tag">电商运营</span><span class="industry-tag">市场通路</span><span class="industry-tag">美妆</span><span class="industry-tag">大健康</span>
-      </div>
-    </div>
-  </div>
-</div>
+    </section>
 
-<!-- ============ 汽车智能制造 ============ -->
-<div class="section" data-category="auto">
-  <div class="section-header">
-    <div class="section-icon" style="background:#f0fdf4;">🚗</div>
-    <div class="section-title">汽车智能制造</div>
-  </div>
-  <div class="mentor-grid">
-    <div class="mentor-card">
-      <div class="card-top">
-        <div class="avatar male">D</div>
-        <div class="card-info">
-          <div class="card-name">Duke 许先生 <span class="badge-vip">首席导师</span></div>
-          <div class="card-title">ADAS域控制器系统架构师</div>
-          <div class="card-school"><span class="school-icon">🎓</span> 硕士学历 · 汽车电子方向</div>
+    <!-- Growth Data -->
+    <section class="section growth-section" id="growth">
+        <div class="container">
+            <div class="section-title">
+                <div class="eyebrow">Data</div>
+                <h2>数据见证成长</h2>
+                <p>2020 年至今，SSR 陪伴的学员规模持续增长，每一年都有更多同学拿到理想 Offer。</p>
+            </div>
+            <div class="growth-content">
+                <div class="growth-chart">
+                    <img src="./pdf_images/page7_img3_(505x236px).png" alt="SSR 学员规模增长趋势 2020-2025">
+                </div>
+                <div class="growth-text">
+                    <h3>从 91 到 281，五年持续增长</h3>
+                    <p>我们不靠营销话术获客，而是把精力放在每一位学员的真实交付上。口碑带来的转介绍与复购，让 SSR 的学员规模实现了稳定且健康的增长。</p>
+                    <p>无论是商科、文科、理工科还是跨专业求职，SSR 都坚持以目标岗位为导向，帮助学员把复杂经历翻译成清晰价值，从而提升获得优质 Offer 的概率。</p>
+                    <div class="growth-stats">
+                        <div class="growth-stat">
+                            <div class="number">1000+</div>
+                            <div class="label">累计上岸学员</div>
+                        </div>
+                        <div class="growth-stat">
+                            <div class="number">5 年</div>
+                            <div class="label">求职陪跑经验</div>
+                        </div>
+                        <div class="growth-stat">
+                            <div class="number">281</div>
+                            <div class="label">2025 年服务学员</div>
+                        </div>
+                        <div class="growth-stat">
+                            <div class="number">100+</div>
+                            <div class="label">名企在职导师</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
-      <div class="card-stats">
-        <div class="stat-item">📅 <span class="stat-val">9年</span>从业</div>
-        <div class="stat-item"><span class="stat-val">智能驾驶全栈</span></div><div class="stat-item"><span class="stat-val">Xavier/Orin量产经验</span></div>
-      </div>
-      <div class="card-companies">
-        <span class="company-tag foreign">哈啰 Robotaxi</span><span class="company-tag foreign">智己汽车</span><span class="company-tag big-tech">Nvidia 平台</span>
-      </div>
-      <div class="card-desc">
-        具备<strong>ADAS域控制器底软、前视感知、系统架构、软硬件研发</strong>全栈能力。主导Nvidia Orin/Thor域控及L3/L4/舱驾融合项目开发。在智己汽车主导Xavier/Orin两代产品量产。
-      </div>
-      <div class="card-industry">
-        <span class="industry-tag">智能驾驶</span><span class="industry-tag">域控制器</span><span class="industry-tag">系统架构</span><span class="industry-tag">自动驾驶</span>
-      </div>
-    </div>
-    <div class="mentor-card">
-      <div class="card-top">
-        <div class="avatar female">H</div>
-        <div class="card-info">
-          <div class="card-name">Helen 黄女士</div>
-          <div class="card-title">整车质量高级经理 / 尺寸工程专家</div>
-          <div class="card-school"><span class="school-icon">🎓</span> 上海交通大学 · MBA</div>
-        </div>
-      </div>
-      <div class="card-stats">
-        <div class="stat-item">📅 <span class="stat-val">27年</span>从业</div>
-        <div class="stat-item"><span class="stat-val">102人团队管理</span></div><div class="stat-item"><span class="stat-val">5次新工厂0-1</span></div>
-      </div>
-      <div class="card-companies">
-        <span class="company-tag soe">上汽大众（VW合资）</span>
-      </div>
-      <div class="card-desc">
-        上海交大MBA，上汽大众<strong>27年整车质量领域</strong>深耕。管理102人团队，完成5次新工厂尺寸中心0-1组建。在车身零部件质量、供应商管理和尺寸工程方面经验极为丰富，拥有多项技术专利，推动<strong>工厂尺寸中心成本下降40%</strong>。
-      </div>
-      <div class="card-industry">
-        <span class="industry-tag">整车质量</span><span class="industry-tag">尺寸工程</span><span class="industry-tag">供应商管理</span><span class="industry-tag">技术专利</span>
-      </div>
-    </div>
-    <div class="mentor-card">
-      <div class="card-top">
-        <div class="avatar male">K</div>
-        <div class="card-info">
-          <div class="card-name">Kevin 秦先生</div>
-          <div class="card-title">汽车零部件技术项目经理</div>
-          <div class="card-school"><span class="school-icon">🎓</span> 上海理工大学 · 机械设计本科</div>
-        </div>
-      </div>
-      <div class="card-stats">
-        <div class="stat-item">📅 <span class="stat-val">11年</span>从业</div>
-        <div class="stat-item"><span class="stat-val">集成模块开发</span></div>
-      </div>
-      <div class="card-companies">
-        <span class="company-tag foreign">华翎智驭</span><span class="company-tag foreign">上海依工</span><span class="company-tag foreign">欧菲滤清器</span>
-      </div>
-      <div class="card-desc">
-        深耕汽车零部件设计与项目管理，成功开发<strong>奥迪EA888项目、奇瑞项目</strong>等整车配套项目。精通集成模块、水阀、换热器等热管理产品开发全流程，具备从设计到量产的项目管理能力。
-      </div>
-      <div class="card-industry">
-        <span class="industry-tag">汽车零部件</span><span class="industry-tag">项目管理</span><span class="industry-tag">热管理</span><span class="industry-tag">产品开发</span>
-      </div>
-    </div>
-  </div>
-</div>
+    </section>
 
-<!-- ============ 管理咨询 ============ -->
-<div class="section" data-category="consulting">
-  <div class="section-header">
-    <div class="section-icon" style="background:#fefce8;">🏢</div>
-    <div class="section-title">管理咨询</div>
-  </div>
-  <div class="mentor-grid">
-    <div class="mentor-card">
-      <div class="card-top">
-        <div class="avatar male">M</div>
-        <div class="card-info">
-          <div class="card-name">Marcus 刘先生 <span class="badge-vip">首席导师</span></div>
-          <div class="card-title">战略咨询合伙人 / 消费品行业</div>
-          <div class="card-school"><span class="school-icon">🎓</span> INSEAD · MBA</div>
+    <!-- FAQ -->
+    <section class="section faq" id="faq">
+        <div class="container">
+            <div class="section-title">
+                <div class="eyebrow">Q&A</div>
+                <h2>常见问题</h2>
+            </div>
+            <div class="faq-list">
+                <div class="faq-item active">
+                    <div class="faq-question">
+                        你们能承诺"保 Offer"吗？
+                        <span class="icon">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>我们不提供任何"保 Offer"服务，也建议你不要轻信任何承诺"保 Offer"的机构。求职是企业需求与候选人能力双向匹配的理性商业行为，受制于市场 HC 变动、业务调整等诸多不可控因素，不存在 100% 的捷径。我们的核心价值在于通过实战导师的商业思维介入与定制化操盘，为你规避试错成本，将你斩获优质 Offer 的概率放大到极致。</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        我的专业很冷门 / 我要跨行，你们能辅导吗？
+                        <span class="icon">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>跨行转型与隐性优势挖掘正是我们的核心壁垒。创始人均已有相关跨行成功经验，我们不看重表面专业对口，而是通过深度盘点，将你的底层能力精准翻译为目标行业 HR 认可的通用业务价值，并为你匹配有同类痛点解决经验的行业教练。</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        上课时间怎么安排？
+                        <span class="icon">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>实行高度灵活的预约制。1V1 辅导时长按照你的课程需求灵活调整，你可以根据个人的求职节点与吸收进度，在服务有效期内随时向管家发起预约。对于突发的紧急面试需求，我们的服务团队设有快速响应机制，确保关键时刻提供策略支持。</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        上课的内容到底有哪些？是录播课吗？
+                        <span class="icon">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>全程为 1V1 线上私教指导，拒绝任何标准化录播网课。我们没有一套打天下的通用模版，所有辅导内容均基于你的真实简历与目标 JD 进行定制。涵盖职业路径诊断、行业/岗位通识拆解、简历精修定稿、行为/业务/压力面全真模拟，以及专属的谈薪策略话术等。</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        你们服务过多少学员，值得信任吗？
+                        <span class="icon">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>截至目前，我们已助力超 1000 位候选人成功斩获目标平台 Offer。我们的学员去向覆盖外企、央国企、上市公司、内资独角兽及出海明星企业；行业横跨医疗、快消、智能制造、新能源、半导体及互联网等热门赛道。具体的真实录取数据与学员反馈，请参考客服朋友圈。</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        有没有简历代投？有没有岗位内推？
+                        <span class="icon">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>我们不提供代投，但提供全流程的投递支持。简历投递动作必须由您本人完成。代投存在极高合规风险，一旦因信息错漏被企业系统判定为代办，极易被直接拉入黑名单取消资格。我们的团队会整理好各阶段开放的岗位信息、投递策略与注意事项，全程指导你完成投递动作。</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        多久会更新一次我能投的岗位？每次是多少个？
+                        <span class="icon">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>我们将保持至少每周一次的更新频率。每次推送的具体岗位数量并非固定不变，它会根据您所锁定的意向城市、目标岗位类型，以及当下所处招聘周期的波峰/波谷（如春/秋招集中爆发期或招聘淡季）进行动态浮动。我们坚持宁缺毋滥的原则，确保推送到您手中的都是高匹配度的有效机会。</p>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
-      <div class="card-stats">
-        <div class="stat-item">📅 <span class="stat-val">15年</span>从业</div>
-        <div class="stat-item"><span class="stat-val">MBB背景</span></div><div class="stat-item"><span class="stat-val">30+战略项目</span></div>
-      </div>
-      <div class="card-companies">
-        <span class="company-tag consulting">McKinsey 麦肯锡</span><span class="company-tag consulting">BCG (前)</span><span class="company-tag consulting">Bain (前)</span>
-      </div>
-      <div class="card-desc">
-        INSEAD MBA，15年战略咨询经验。曾在<strong>麦肯锡、BCG、贝恩</strong>等顶级咨询公司任职，主导消费品、零售、TMT领域30+战略转型项目，单项目最高合同额<strong>5000万+</strong>。
-      </div>
-      <div class="card-industry">
-        <span class="industry-tag">战略咨询</span><span class="industry-tag">MBB</span><span class="industry-tag">消费品</span><span class="industry-tag">零售战略</span>
-      </div>
-    </div>
-    <div class="mentor-card">
-      <div class="card-top">
-        <div class="avatar female">R</div>
-        <div class="card-info">
-          <div class="card-name">Rachel 张女士</div>
-          <div class="card-title">组织变革咨询总监</div>
-          <div class="card-school"><span class="school-icon">🎓</span> 北京大学 · 组织心理学硕士</div>
-        </div>
-      </div>
-      <div class="card-stats">
-        <div class="stat-item">📅 <span class="stat-val">12年</span>从业</div>
-        <div class="stat-item"><span class="stat-val">四大咨询背景</span></div><div class="stat-item"><span class="stat-val">50+企业变革</span></div>
-      </div>
-      <div class="card-companies">
-        <span class="company-tag consulting">Deloitte 德勤</span><span class="company-tag consulting">Accenture 埃森哲</span>
-      </div>
-      <div class="card-desc">
-        北京大学组织心理学硕士，德勤+埃森哲双料背景。主导<strong>央企、大型民企及跨国公司</strong>组织架构重塑、文化落地、并购后整合项目，累计服务50+企业，覆盖员工超<strong>10万人</strong>。
-      </div>
-      <div class="card-industry">
-        <span class="industry-tag">组织变革</span><span class="industry-tag">人才战略</span><span class="industry-tag">并购整合</span><span class="industry-tag">企业文化</span>
-      </div>
-    </div>
-    <div class="mentor-card">
-      <div class="card-top">
-        <div class="avatar male">V</div>
-        <div class="card-info">
-          <div class="card-name">Victor 杨先生</div>
-          <div class="card-title">数字化转型咨询专家</div>
-          <div class="card-school"><span class="school-icon">🎓</span> 清华大学 · 计算机硕士</div>
-        </div>
-      </div>
-      <div class="card-stats">
-        <div class="stat-item">📅 <span class="stat-val">11年</span>从业</div>
-        <div class="stat-item"><span class="stat-val">20+数字化项目</span></div><div class="stat-item"><span class="stat-val">制造业+金融</span></div>
-      </div>
-      <div class="card-companies">
-        <span class="company-tag consulting">IBM Consulting</span><span class="company-tag consulting">Capgemini 凯捷</span>
-      </div>
-      <div class="card-desc">
-        清华计算机硕士，在IBM和凯捷服务超过10年。专注<strong>制造业与金融行业数字化转型</strong>，帮助企业从ERP升级、数据中台到智能决策全链路落地，主导项目累计创造降本增效<strong>超3亿元</strong>。
-      </div>
-      <div class="card-industry">
-        <span class="industry-tag">数字化转型</span><span class="industry-tag">ERP</span><span class="industry-tag">数据中台</span><span class="industry-tag">智能制造</span>
-      </div>
-    </div>
-    <div class="mentor-card">
-      <div class="card-top">
-        <div class="avatar female">S</div>
-        <div class="card-info">
-          <div class="card-name">Sandra 周女士</div>
-          <div class="card-title">人力资源咨询总监</div>
-          <div class="card-school"><span class="school-icon">🎓</span> 康奈尔大学 · 劳资关系硕士</div>
-        </div>
-      </div>
-      <div class="card-stats">
-        <div class="stat-item">📅 <span class="stat-val">10年</span>从业</div>
-        <div class="stat-item"><span class="stat-val">薪酬体系设计</span></div><div class="stat-item"><span class="stat-val">80+项目经验</span></div>
-      </div>
-      <div class="card-companies">
-        <span class="company-tag consulting">Mercer 美世</span><span class="company-tag consulting">Aon 怡安</span>
-      </div>
-      <div class="card-desc">
-        康奈尔大学劳资关系硕士，美世+怡安十年人力资源咨询经验。专精<strong>薪酬体系设计、岗位职级体系、长期激励方案</strong>，服务过40余家上市公司及独角兽企业，擅长薪酬调研与对标分析。
-      </div>
-      <div class="card-industry">
-        <span class="industry-tag">薪酬设计</span><span class="industry-tag">职级体系</span><span class="industry-tag">长期激励</span><span class="industry-tag">人力资源咨询</span>
-      </div>
-    </div>
-    <div class="mentor-card">
-      <div class="card-top">
-        <div class="avatar male">A</div>
-        <div class="card-info">
-          <div class="card-name">Anson 赵先生</div>
-          <div class="card-title">尽职调查与风险咨询专家</div>
-          <div class="card-school"><span class="school-icon">🎓</span> 复旦大学 · 财务管理硕士</div>
-        </div>
-      </div>
-      <div class="card-stats">
-        <div class="stat-item">📅 <span class="stat-val">9年</span>从业</div>
-        <div class="stat-item"><span class="stat-val">四大背景</span></div><div class="stat-item"><span class="stat-val">100+尽调项目</span></div>
-      </div>
-      <div class="card-companies">
-        <span class="company-tag consulting">PwC 普华永道</span><span class="company-tag foreign">KPMG 毕马威</span>
-      </div>
-      <div class="card-desc">
-        复旦财务管理硕士，普华永道+毕马威9年尽调与风险咨询经验。完成<strong>100+财务尽调、合规审计与风险评估</strong>项目，涵盖TMT、医疗、消费赛道，交易总金额超<strong>200亿元</strong>。
-      </div>
-      <div class="card-industry">
-        <span class="industry-tag">财务尽调</span><span class="industry-tag">合规审计</span><span class="industry-tag">风险咨询</span><span class="industry-tag">四大</span>
-      </div>
-    </div>
-    <div class="mentor-card">
-      <div class="card-top">
-        <div class="avatar female">D</div>
-        <div class="card-info">
-          <div class="card-name">Diana 吴女士</div>
-          <div class="card-title">ESG可持续发展咨询经理</div>
-          <div class="card-school"><span class="school-icon">🎓</span> 伦敦政治经济学院 · 环境政策硕士</div>
-        </div>
-      </div>
-      <div class="card-stats">
-        <div class="stat-item">📅 <span class="stat-val">8年</span>从业</div>
-        <div class="stat-item"><span class="stat-val">ESG战略</span></div><div class="stat-item"><span class="stat-val">双碳规划</span></div>
-      </div>
-      <div class="card-companies">
-        <span class="company-tag consulting">EY 安永</span><span class="company-tag foreign">Sustainalytics</span>
-      </div>
-      <div class="card-desc">
-        LSE环境政策硕士，安永ESG咨询团队核心成员。主导<strong>30+上市企业ESG报告、碳中和路线图、绿色金融</strong>项目，深谙ISSB、GRI、TCFD等国际准则与中国监管要求。
-      </div>
-      <div class="card-industry">
-        <span class="industry-tag">ESG</span><span class="industry-tag">碳中和</span><span class="industry-tag">绿色金融</span><span class="industry-tag">可持续发展</span>
-      </div>
-    </div>
-  </div>
-</div>
+    </section>
 
-<!-- ============ 人工智能 ============ -->
-<div class="section" data-category="ai">
-  <div class="section-header">
-    <div class="section-icon" style="background:#faf5ff;">🤖</div>
-    <div class="section-title">人工智能</div>
-  </div>
-  <div class="mentor-grid">
-    <div class="mentor-card">
-      <div class="card-top">
-        <div class="avatar male">F</div>
-        <div class="card-info">
-          <div class="card-name">Felix 陈先生 <span class="badge-vip">首席导师</span></div>
-          <div class="card-title">大模型算法负责人</div>
-          <div class="card-school"><span class="school-icon">🎓</span> 卡内基梅隆大学 · 计算机博士</div>
+    <!-- Success Stories -->
+    <section class="section success-stories" id="stories">
+        <div class="container">
+            <div class="section-title">
+                <div class="eyebrow">Success Stories</div>
+                <h2>学员 Offer 墙</h2>
+                <p>真实学员斩获的名企面试邀请与 Offer 记录，覆盖外企、央国企、互联网与大健康等热门赛道。</p>
+            </div>
+            <div class="masonry-grid">
+                <div class="masonry-item"><img src="./pdf_images/page7_img1_(264x352px).jpeg" alt="学员名企面试邀请"></div>
+                <div class="masonry-item"><img src="./pdf_images/page8_img1_(264x114px).png" alt="学员好评"></div>
+                <div class="masonry-item"><img src="./pdf_images/page8_img3_(264x128px).png" alt="学员拿到 offer"></div>
+                <div class="masonry-item"><img src="./pdf_images/page8_img6_(264x114px).png" alt="学员面邀与 offer"></div>
+                <div class="masonry-item"><img src="./pdf_images/page7_img2_(264x352px).jpeg" alt="学员名企 offer 录用通知"></div>
+                <div class="masonry-item"><img src="./pdf_images/page8_img2_(264x107px).png" alt="学员面试与谈薪"></div>
+                <div class="masonry-item"><img src="./pdf_images/page8_img4_(264x149px).png" alt="学员真诚反馈"></div>
+                <div class="masonry-item"><img src="./pdf_images/page8_img7_(264x123px).png" alt="学员转行 offer"></div>
+                <div class="masonry-item"><img src="./pdf_images/page8_img5_(264x351px).jpeg" alt="学员名企面试邀约"></div>
+                <div class="masonry-item"><img src="./pdf_images/page8_img8_(264x109px).png" alt="学员满意 offer"></div>
+            </div>
         </div>
-      </div>
-      <div class="card-stats">
-        <div class="stat-item">📅 <span class="stat-val">8年</span>从业</div>
-        <div class="stat-item"><span class="stat-val">LLM研发</span></div><div class="stat-item"><span class="stat-val">百亿参数模型</span></div>
-      </div>
-      <div class="card-companies">
-        <span class="company-tag foreign">智谱AI</span><span class="company-tag big-tech">Google Brain (前)</span><span class="company-tag finance">OpenAI (实习)</span>
-      </div>
-      <div class="card-desc">
-        CMU计算机博士，曾在Google Brain参与Transformer架构研究。现任智谱AI核心算法负责人，主导<strong>百亿参数大语言模型</strong>预训练与对齐，模型在C-Eval等多项基准中名列前茅。
-      </div>
-      <div class="card-industry">
-        <span class="industry-tag">大模型</span><span class="industry-tag">NLP</span><span class="industry-tag">Transformer</span><span class="industry-tag">RLHF</span>
-      </div>
-    </div>
-    <div class="mentor-card">
-      <div class="card-top">
-        <div class="avatar female">N</div>
-        <div class="card-info">
-          <div class="card-name">Nina 孙女士</div>
-          <div class="card-title">计算机视觉研发总监</div>
-          <div class="card-school"><span class="school-icon">🎓</span> 中国科学院 · 模式识别博士</div>
-        </div>
-      </div>
-      <div class="card-stats">
-        <div class="stat-item">📅 <span class="stat-val">10年</span>从业</div>
-        <div class="stat-item"><span class="stat-val">CV顶会50+论文</span></div><div class="stat-item"><span class="stat-val">10+专利</span></div>
-      </div>
-      <div class="card-companies">
-        <span class="company-tag foreign">商汤科技</span><span class="company-tag foreign">旷视科技 (前)</span>
-      </div>
-      <div class="card-desc">
-        中科院博士，CV领域顶会论文50+篇，被引超5000次。在商汤科技主导<strong>自动驾驶感知、工业缺陷检测</strong>等核心视觉产品线，多项技术落地头部车企和智能制造产线。
-      </div>
-      <div class="card-industry">
-        <span class="industry-tag">计算机视觉</span><span class="industry-tag">自动驾驶</span><span class="industry-tag">工业检测</span><span class="industry-tag">深度学习</span>
-      </div>
-    </div>
-    <div class="mentor-card">
-      <div class="card-top">
-        <div class="avatar male">K</div>
-        <div class="card-info">
-          <div class="card-name">Kyle 马先生</div>
-          <div class="card-title">推荐系统架构师</div>
-          <div class="card-school"><span class="school-icon">🎓</span> 浙江大学 · 计算机硕士</div>
-        </div>
-      </div>
-      <div class="card-stats">
-        <div class="stat-item">📅 <span class="stat-val">9年</span>从业</div>
-        <div class="stat-item"><span class="stat-val">千人千面推荐</span></div><div class="stat-item"><span class="stat-val">TB级数据处理</span></div>
-      </div>
-      <div class="card-companies">
-        <span class="company-tag big-tech">字节跳动</span><span class="company-tag big-tech">快手 (前)</span>
-      </div>
-      <div class="card-desc">
-        浙大计算机硕士，字节跳动推荐系统核心架构师。设计<strong>千人千面实时推荐引擎</strong>，支撑日活数亿用户的内容分发，通过多目标优化将用户时长提升<strong>18%</strong>。
-      </div>
-      <div class="card-industry">
-        <span class="industry-tag">推荐系统</span><span class="industry-tag">机器学习</span><span class="industry-tag">大数据</span><span class="industry-tag">A/B实验</span>
-      </div>
-    </div>
-    <div class="mentor-card">
-      <div class="card-top">
-        <div class="avatar female">O</div>
-        <div class="card-info">
-          <div class="card-name">Olivia 郑女士</div>
-          <div class="card-title">NLP产品负责人</div>
-          <div class="card-school"><span class="school-icon">🎓</span> 南洋理工大学 · 计算语言学硕士</div>
-        </div>
-      </div>
-      <div class="card-stats">
-        <div class="stat-item">📅 <span class="stat-val">7年</span>从业</div>
-        <div class="stat-item"><span class="stat-val">对话AI</span></div><div class="stat-item"><span class="stat-val">多语言NLP</span></div>
-      </div>
-      <div class="card-companies">
-        <span class="company-tag big-tech">阿里巴巴达摩院</span><span class="company-tag foreign">微软亚洲研究院 (前)</span>
-      </div>
-      <div class="card-desc">
-        NTU计算语言学硕士，阿里达摩院NLP产品负责人。主导<strong>多语言对话AI、智能客服、法律AI</strong>等产品从0到1落地，服务全球50万企业客户，日均调用量<strong>超10亿次</strong>。
-      </div>
-      <div class="card-industry">
-        <span class="industry-tag">NLP</span><span class="industry-tag">对话AI</span><span class="industry-tag">多语言</span><span class="industry-tag">产品化</span>
-      </div>
-    </div>
-    <div class="mentor-card">
-      <div class="card-top">
-        <div class="avatar male">R</div>
-        <div class="card-info">
-          <div class="card-name">Ryan 王先生</div>
-          <div class="card-title">AI Infra技术总监</div>
-          <div class="card-school"><span class="school-icon">🎓</span> 上海交通大学 · 电子工程博士</div>
-        </div>
-      </div>
-      <div class="card-stats">
-        <div class="stat-item">📅 <span class="stat-val">7年</span>从业</div>
-        <div class="stat-item"><span class="stat-val">万卡集群</span></div><div class="stat-item"><span class="stat-val">训练效率优化</span></div>
-      </div>
-      <div class="card-companies">
-        <span class="company-tag big-tech">华为昇腾</span><span class="company-tag big-tech">百度智能云 (前)</span>
-      </div>
-      <div class="card-desc">
-        上交大博士，专注AI基础设施。华为昇腾团队核心成员，设计<strong>万卡级别GPU集群调度系统</strong>，将大模型训练效率提升<strong>40%</strong>，支持千亿参数模型的稳定分布式训练。
-      </div>
-      <div class="card-industry">
-        <span class="industry-tag">AI Infra</span><span class="industry-tag">分布式训练</span><span class="industry-tag">GPU集群</span><span class="industry-tag">算力调度</span>
-      </div>
-    </div>
-    <div class="mentor-card">
-      <div class="card-top">
-        <div class="avatar female">Y</div>
-        <div class="card-info">
-          <div class="card-name">Yuki 吴女士</div>
-          <div class="card-title">AIGC应用产品总监</div>
-          <div class="card-school"><span class="school-icon">🎓</span> 早稻田大学 · 信息设计硕士</div>
-        </div>
-      </div>
-      <div class="card-stats">
-        <div class="stat-item">📅 <span class="stat-val">6年</span>从业</div>
-        <div class="stat-item"><span class="stat-val">文生图/视频</span></div><div class="stat-item"><span class="stat-val">千万级用户</span></div>
-      </div>
-      <div class="card-companies">
-        <span class="company-tag foreign">MiniMax</span><span class="company-tag big-tech">腾讯AILab (前)</span>
-      </div>
-      <div class="card-desc">
-        早稻田大学信息设计硕士，MiniMax AIGC产品总监。从0到1打造<strong>文生图、文生视频AI创作工具</strong>，全球累计用户超千万，在日韩市场App Store排名<strong>Top 3</strong>。
-      </div>
-      <div class="card-industry">
-        <span class="industry-tag">AIGC</span><span class="industry-tag">文生图</span><span class="industry-tag">多模态</span><span class="industry-tag">国际化</span>
-      </div>
-    </div>
-  </div>
-</div>
+    </section>
 
-<!-- ============ 半导体集成电路 ============ -->
-<div class="section" data-category="semiconductor">
-  <div class="section-header">
-    <div class="section-icon" style="background:#f0f9ff;">🔬</div>
-    <div class="section-title">半导体集成电路</div>
-  </div>
-  <div class="mentor-grid">
-    <div class="mentor-card">
-      <div class="card-top">
-        <div class="avatar male">B</div>
-        <div class="card-info">
-          <div class="card-name">Brian 何先生 <span class="badge-vip">首席导师</span></div>
-          <div class="card-title">芯片设计总监 / 先进制程专家</div>
-          <div class="card-school"><span class="school-icon">🎓</span> 加州大学伯克利分校 · 电子工程博士</div>
+    <!-- Mentor Team -->
+    <section class="section" id="mentors">
+        <div class="container" style="text-align: center;">
+            <div class="section-title">
+                <div class="eyebrow">Mentor Team</div>
+                <h2>200+ 名企在职导师</h2>
+                <p>汇聚金融、科技、医药、新能源等 20+ 核心赛道的顶尖实战专家，为你的求职之路保驾护航。</p>
+            </div>
+            <div style="display: flex; justify-content: center; gap: 32px; flex-wrap: wrap; margin-top: 40px;">
+                <div style="background: #fff; border-radius: 20px; padding: 40px 32px; box-shadow: 0 8px 32px rgba(0,0,0,0.08); border: 1px solid #E8E8E8; text-align: center; width: 260px;">
+                    <div style="font-size: 48px; margin-bottom: 16px;">👨🏫</div>
+                    <div style="font-size: 32px; font-weight: 900; color: #F7931E; margin-bottom: 8px;">200+</div>
+                    <div style="font-size: 15px; color: #555555;">资深行业导师</div>
+                </div>
+                <div style="background: #fff; border-radius: 20px; padding: 40px 32px; box-shadow: 0 8px 32px rgba(0,0,0,0.08); border: 1px solid #E8E8E8; text-align: center; width: 260px;">
+                    <div style="font-size: 48px; margin-bottom: 16px;">🏢</div>
+                    <div style="font-size: 32px; font-weight: 900; color: #6B2D8E; margin-bottom: 8px;">20+</div>
+                    <div style="font-size: 15px; color: #555555;">行业赛道覆盖</div>
+                </div>
+                <div style="background: #fff; border-radius: 20px; padding: 40px 32px; box-shadow: 0 8px 32px rgba(0,0,0,0.08); border: 1px solid #E8E8E8; text-align: center; width: 260px;">
+                    <div style="font-size: 48px; margin-bottom: 16px;">⏱️</div>
+                    <div style="font-size: 32px; font-weight: 900; color: #F7931E; margin-bottom: 8px;">12年</div>
+                    <div style="font-size: 15px; color: #555555;">平均从业年限</div>
+                </div>
+            </div>
+            <div style="margin-top: 48px;">
+                <a href="./mentors-site/index.html" class="btn btn-primary" style="font-size: 17px; padding: 16px 48px;">查看全部导师 →</a>
+            </div>
         </div>
-      </div>
-      <div class="card-stats">
-        <div class="stat-item">📅 <span class="stat-val">12年</span>从业</div>
-        <div class="stat-item"><span class="stat-val">5nm/3nm制程</span></div><div class="stat-item"><span class="stat-val">50+流片经验</span></div>
-      </div>
-      <div class="card-companies">
-        <span class="company-tag big-tech">AMD</span><span class="company-tag foreign">TSMC 台积电 (前)</span>
-      </div>
-      <div class="card-desc">
-        UC Berkeley博士，12年数字芯片设计经验。在AMD主导<strong>5nm/3nm先进制程CPU核心设计</strong>，曾于台积电参与FinFET工艺开发。累计主导50+次成功流片，芯片面积与功耗优化行业领先。
-      </div>
-      <div class="card-industry">
-        <span class="industry-tag">芯片设计</span><span class="industry-tag">先进制程</span><span class="industry-tag">CPU</span><span class="industry-tag">Verilog</span>
-      </div>
-    </div>
-    <div class="mentor-card">
-      <div class="card-top">
-        <div class="avatar female">S</div>
-        <div class="card-info">
-          <div class="card-name">Serena 朱女士</div>
-          <div class="card-title">EDA工具研发专家</div>
-          <div class="card-school"><span class="school-icon">🎓</span> 清华大学 · 微电子硕士</div>
-        </div>
-      </div>
-      <div class="card-stats">
-        <div class="stat-item">📅 <span class="stat-val">9年</span>从业</div>
-        <div class="stat-item"><span class="stat-val">国产EDA</span></div><div class="stat-item"><span class="stat-val">物理设计工具</span></div>
-      </div>
-      <div class="card-companies">
-        <span class="company-tag soe">华大九天</span><span class="company-tag foreign">Synopsys (前)</span>
-      </div>
-      <div class="card-desc">
-        清华微电子硕士，曾在Synopsys从事布局布线工具开发，现为华大九天核心研发。主导<strong>国产EDA物理设计平台</strong>的算法突破，在多家国内头部Fabless完成验证，打破国外垄断。
-      </div>
-      <div class="card-industry">
-        <span class="industry-tag">EDA</span><span class="industry-tag">物理设计</span><span class="industry-tag">国产替代</span><span class="industry-tag">算法</span>
-      </div>
-    </div>
-    <div class="mentor-card">
-      <div class="card-top">
-        <div class="avatar male">O</div>
-        <div class="card-info">
-          <div class="card-name">Oscar 林先生</div>
-          <div class="card-title">模拟芯片设计经理</div>
-          <div class="card-school"><span class="school-icon">🎓</span> 复旦大学 · 集成电路硕士</div>
-        </div>
-      </div>
-      <div class="card-stats">
-        <div class="stat-item">📅 <span class="stat-val">11年</span>从业</div>
-        <div class="stat-item"><span class="stat-val">电源管理芯片</span></div><div class="stat-item"><span class="stat-val">车规级认证</span></div>
-      </div>
-      <div class="card-companies">
-        <span class="company-tag foreign">TI 德州仪器</span><span class="company-tag foreign">矽力杰</span>
-      </div>
-      <div class="card-desc">
-        复旦集成电路硕士，TI+矽力杰11年模拟芯片设计经验。主导<strong>车规级电源管理芯片、高压DC-DC</strong>等产品线，多款芯片通过AEC-Q100认证，累计出货<strong>超5亿颗</strong>。
-      </div>
-      <div class="card-industry">
-        <span class="industry-tag">模拟IC</span><span class="industry-tag">电源管理</span><span class="industry-tag">车规级</span><span class="industry-tag">DC-DC</span>
-      </div>
-    </div>
-    <div class="mentor-card">
-      <div class="card-top">
-        <div class="avatar female">C</div>
-        <div class="card-info">
-          <div class="card-name">Cathy 范女士</div>
-          <div class="card-title">半导体工艺整合经理</div>
-          <div class="card-school"><span class="school-icon">🎓</span> 上海交通大学 · 材料科学硕士</div>
-        </div>
-      </div>
-      <div class="card-stats">
-        <div class="stat-item">📅 <span class="stat-val">10年</span>从业</div>
-        <div class="stat-item"><span class="stat-val">12英寸晶圆</span></div><div class="stat-item"><span class="stat-val">良率提升</span></div>
-      </div>
-      <div class="card-companies">
-        <span class="company-tag soe">中芯国际SMIC</span><span class="company-tag foreign">华虹宏力 (前)</span>
-      </div>
-      <div class="card-desc">
-        上交大材料硕士，中芯国际工艺整合经理。负责<strong>12英寸晶圆先进逻辑工艺</strong>的良率提升，通过工艺窗口优化将某关键层良率从<strong>72%提升至96%</strong>，年节省成本超亿元。
-      </div>
-      <div class="card-industry">
-        <span class="industry-tag">工艺整合</span><span class="industry-tag">良率提升</span><span class="industry-tag">晶圆制造</span><span class="industry-tag">先进逻辑</span>
-      </div>
-    </div>
-    <div class="mentor-card">
-      <div class="card-top">
-        <div class="avatar male">D</div>
-        <div class="card-info">
-          <div class="card-name">Daniel 黄先生</div>
-          <div class="card-title">GPU架构师</div>
-          <div class="card-school"><span class="school-icon">🎓</span> 密歇根大学 · 计算机工程硕士</div>
-        </div>
-      </div>
-      <div class="card-stats">
-        <div class="stat-item">📅 <span class="stat-val">8年</span>从业</div>
-        <div class="stat-item"><span class="stat-val">GPU架构设计</span></div><div class="stat-item"><span class="stat-val">AI加速器</span></div>
-      </div>
-      <div class="card-companies">
-        <span class="company-tag foreign">壁仞科技</span><span class="company-tag big-tech">NVIDIA 英伟达 (前)</span>
-      </div>
-      <div class="card-desc">
-        密歇根大学硕士，曾在NVIDIA参与新一代GPU架构设计，现任职壁仞科技。专注<strong>AI推理与训练加速架构</strong>，主导设计的国产GPU在MLPerf基准测试中达到国际主流水平。
-      </div>
-      <div class="card-industry">
-        <span class="industry-tag">GPU</span><span class="industry-tag">AI芯片</span><span class="industry-tag">架构设计</span><span class="industry-tag">MLPerf</span>
-      </div>
-    </div>
-    <div class="mentor-card">
-      <div class="card-top">
-        <div class="avatar female">L</div>
-        <div class="card-info">
-          <div class="card-name">Lily 金女士</div>
-          <div class="card-title">封装测试技术专家</div>
-          <div class="card-school"><span class="school-icon">🎓</span> 南京大学 · 物理本科</div>
-        </div>
-      </div>
-      <div class="card-stats">
-        <div class="stat-item">📅 <span class="stat-val">14年</span>从业</div>
-        <div class="stat-item"><span class="stat-val">先进封装</span></div><div class="stat-item"><span class="stat-val">Chiplet</span></div>
-      </div>
-      <div class="card-companies">
-        <span class="company-tag foreign">长电科技</span><span class="company-tag foreign">日月光 (前)</span>
-      </div>
-      <div class="card-desc">
-        南大物理学背景，长电科技封装技术专家。深耕<strong>先进封装技术（3D IC、Chiplet、Fan-out）</strong>，主导多个客户先进封装NPI项目，成功推动5nm芯片先进封装量产。
-      </div>
-      <div class="card-industry">
-        <span class="industry-tag">先进封装</span><span class="industry-tag">Chiplet</span><span class="industry-tag">3D IC</span><span class="industry-tag">NPI</span>
-      </div>
-    </div>
-  </div>
-</div>
+    </section>
 
-<!-- ============ 网络安全 ============ -->
-<div class="section" data-category="cybersec">
-  <div class="section-header">
-    <div class="section-icon" style="background:#fff1f2;">🔒</div>
-    <div class="section-title">网络安全</div>
-  </div>
-  <div class="mentor-grid">
-    <div class="mentor-card">
-      <div class="card-top">
-        <div class="avatar male">Z</div>
-        <div class="card-info">
-          <div class="card-name">Zero 王先生 <span class="badge-vip">首席导师</span></div>
-          <div class="card-title">攻防演练专家 / 红队负责人</div>
-          <div class="card-school"><span class="school-icon">🎓</span> 北京邮电大学 · 信息安全硕士</div>
+    <!-- CTA -->
+    <section class="cta" id="contact">
+        <div class="container">
+            <h2>开启你的职场跃迁之旅</h2>
+            <p>如果你认同这种理性、务实且结果导向的专业主义，我们非常期待与你同行。</p>
+            <a href="#" class="btn btn-primary" style="font-size: 17px; padding: 16px 40px;">立即预约 1V1 评估</a>
+            <div class="social-links">
+                <a href="#" class="social-link">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+                    小红书 @SSR思锐求职
+                </a>
+                <a href="#" class="social-link">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                    抖音 @SSR思锐求职
+                </a>
+                <a href="#" class="social-link">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"/></svg>
+                    微信 @SSR思锐求职
+                </a>
+            </div>
         </div>
-      </div>
-      <div class="card-stats">
-        <div class="stat-item">📅 <span class="stat-val">10年</span>从业</div>
-        <div class="stat-item"><span class="stat-val">国家级护网</span></div><div class="stat-item"><span class="stat-val">CISP/CISSP</span></div>
-      </div>
-      <div class="card-companies">
-        <span class="company-tag foreign">奇安信</span><span class="company-tag foreign">360 (前)</span>
-      </div>
-      <div class="card-desc">
-        北邮信息安全硕士，奇安信红队负责人。主导<strong>国家级护网行动及关键基础设施安全评估</strong>，带队完成金融、能源等50+重点单位攻防演练，发现高危漏洞<strong>300+个</strong>。
-      </div>
-      <div class="card-industry">
-        <span class="industry-tag">红队</span><span class="industry-tag">渗透测试</span><span class="industry-tag">护网行动</span><span class="industry-tag">漏洞挖掘</span>
-      </div>
-    </div>
-    <div class="mentor-card">
-      <div class="card-top">
-        <div class="avatar female">E</div>
-        <div class="card-info">
-          <div class="card-name">Eva 郭女士</div>
-          <div class="card-title">数据隐私合规专家</div>
-          <div class="card-school"><span class="school-icon">🎓</span> 华东政法大学 · 法学硕士</div>
-        </div>
-      </div>
-      <div class="card-stats">
-        <div class="stat-item">📅 <span class="stat-val">8年</span>从业</div>
-        <div class="stat-item"><span class="stat-val">GDPR/个保法</span></div><div class="stat-item"><span class="stat-val">数据跨境</span></div>
-      </div>
-      <div class="card-companies">
-        <span class="company-tag foreign">蚂蚁集团</span><span class="company-tag big-tech">携程 (前)</span>
-      </div>
-      <div class="card-desc">
-        华东政法法学硕士，蚂蚁集团数据隐私合规负责人。主导<strong>GDPR合规体系建设、个人信息保护法落地</strong>及数据跨境传输安全评估，协助企业在欧洲、东南亚市场的合规运营。
-      </div>
-      <div class="card-industry">
-        <span class="industry-tag">数据隐私</span><span class="industry-tag">GDPR</span><span class="industry-tag">个保法</span><span class="industry-tag">数据跨境</span>
-      </div>
-    </div>
-    <div class="mentor-card">
-      <div class="card-top">
-        <div class="avatar male">G</div>
-        <div class="card-info">
-          <div class="card-name">Ghost 钱先生</div>
-          <div class="card-title">安全架构师 / 零信任专家</div>
-          <div class="card-school"><span class="school-icon">🎓</span> 中国科学技术大学 · 网络安全硕士</div>
-        </div>
-      </div>
-      <div class="card-stats">
-        <div class="stat-item">📅 <span class="stat-val">9年</span>从业</div>
-        <div class="stat-item"><span class="stat-val">零信任架构</span></div><div class="stat-item"><span class="stat-val">IAM体系</span></div>
-      </div>
-      <div class="card-companies">
-        <span class="company-tag big-tech">华为</span><span class="company-tag foreign">深信服 (前)</span>
-      </div>
-      <div class="card-desc">
-        中科大网络安全硕士，华为安全架构师。设计<strong>全球化零信任安全架构</strong>，覆盖50万+终端设备，构建统一的身份认证与访问管理体系，抵御APT攻击成功率<strong>99.9%</strong>。
-      </div>
-      <div class="card-industry">
-        <span class="industry-tag">零信任</span><span class="industry-tag">IAM</span><span class="industry-tag">安全架构</span><span class="industry-tag">APT防御</span>
-      </div>
-    </div>
-    <div class="mentor-card">
-      <div class="card-top">
-        <div class="avatar female">I</div>
-        <div class="card-info">
-          <div class="card-name">Iris 周女士</div>
-          <div class="card-title">安全运营中心(SOC)总监</div>
-          <div class="card-school"><span class="school-icon">🎓</span> 武汉大学 · 计算机本科</div>
-        </div>
-      </div>
-      <div class="card-stats">
-        <div class="stat-item">📅 <span class="stat-val">12年</span>从业</div>
-        <div class="stat-item"><span class="stat-val">7×24 SOC</span></div><div class="stat-item"><span class="stat-val">日均百万告警</span></div>
-      </div>
-      <div class="card-companies">
-        <span class="company-tag big-tech">腾讯安全</span><span class="company-tag foreign">绿盟科技 (前)</span>
-      </div>
-      <div class="card-desc">
-        武大计算机背景，腾讯安全SOC总监。搭建<strong>日均处理百万级告警的智能安全运营平台</strong>，集成SOAR自动化响应，将平均MTTD从<strong>4小时压缩至15分钟</strong>。
-      </div>
-      <div class="card-industry">
-        <span class="industry-tag">SOC</span><span class="industry-tag">SIEM</span><span class="industry-tag">SOAR</span><span class="industry-tag">威胁检测</span>
-      </div>
-    </div>
-    <div class="mentor-card">
-      <div class="card-top">
-        <div class="avatar male">J</div>
-        <div class="card-info">
-          <div class="card-name">Jack 丁先生</div>
-          <div class="card-title">区块链安全研究员</div>
-          <div class="card-school"><span class="school-icon">🎓</span> 上海交通大学 · 密码学博士</div>
-        </div>
-      </div>
-      <div class="card-stats">
-        <div class="stat-item">📅 <span class="stat-val">6年</span>从业</div>
-        <div class="stat-item"><span class="stat-val">智能合约审计</span></div><div class="stat-item"><span class="stat-val">零知识证明</span></div>
-      </div>
-      <div class="card-companies">
-        <span class="company-tag foreign">CertiK</span><span class="company-tag foreign">慢雾科技 (前)</span>
-      </div>
-      <div class="card-desc">
-        上交大密码学博士，CertiK安全研究员。完成<strong>500+智能合约安全审计</strong>，发现并修复漏洞累计保护资产超<strong>50亿美元</strong>。精通零知识证明、MPC等前沿密码技术。
-      </div>
-      <div class="card-industry">
-        <span class="industry-tag">区块链安全</span><span class="industry-tag">智能合约</span><span class="industry-tag">密码学</span><span class="industry-tag">零知识证明</span>
-      </div>
-    </div>
-    <div class="mentor-card">
-      <div class="card-top">
-        <div class="avatar female">S</div>
-        <div class="card-info">
-          <div class="card-name">Scarlet 林女士</div>
-          <div class="card-title">云安全合规架构师</div>
-          <div class="card-school"><span class="school-icon">🎓</span> 浙江大学 · 网络空间安全硕士</div>
-        </div>
-      </div>
-      <div class="card-stats">
-        <div class="stat-item">📅 <span class="stat-val">7年</span>从业</div>
-        <div class="stat-item"><span class="stat-val">等保2.0</span></div><div class="stat-item"><span class="stat-val">云原生安全</span></div>
-      </div>
-      <div class="card-companies">
-        <span class="company-tag big-tech">阿里云</span><span class="company-tag foreign">AWS (前)</span>
-      </div>
-      <div class="card-desc">
-        浙大网安硕士，阿里云安全架构师。主导<strong>等保2.0三级、SOC2、ISO27001</strong>等合规体系建设，为金融、政务客户提供云原生安全解决方案，覆盖<strong>1000+企业客户</strong>。
-      </div>
-      <div class="card-industry">
-        <span class="industry-tag">云安全</span><span class="industry-tag">等保</span><span class="industry-tag">合规</span><span class="industry-tag">SOC2</span>
-      </div>
-    </div>
-  </div>
-</div>
+    </section>
 
-<!-- ============ 低空经济 ============ -->
-<div class="section" data-category="lowalt">
-  <div class="section-header">
-    <div class="section-icon" style="background:#f8fafc;">🚁</div>
-    <div class="section-title">低空经济</div>
-  </div>
-  <div class="mentor-grid">
-    <div class="mentor-card">
-      <div class="card-top">
-        <div class="avatar male">H</div>
-        <div class="card-info">
-          <div class="card-name">Harry 王先生 <span class="badge-vip">首席导师</span></div>
-          <div class="card-title">eVTOL飞控系统总工</div>
-          <div class="card-school"><span class="school-icon">🎓</span> 北京航空航天大学 · 飞行器设计博士</div>
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-brand">
+                <img src="./logo/logo.png" alt="SSR 思锐求职">
+                <span>SSR 思锐求职</span>
+            </div>
+            <p>SUPER SUCCESS RESULTS · 全流程求职陪跑</p>
+            <p style="margin-top: 8px; opacity: 0.6;">本页面仅供 SSR思锐求职 产品说明使用，最终服务内容与价格以实际合同为准。</p>
         </div>
-      </div>
-      <div class="card-stats">
-        <div class="stat-item">📅 <span class="stat-val">10年</span>从业</div>
-        <div class="stat-item"><span class="stat-val">适航取证</span></div><div class="stat-item"><span class="stat-val">飞控算法</span></div>
-      </div>
-      <div class="card-companies">
-        <span class="company-tag foreign">亿航智能</span><span class="company-tag foreign">峰飞航空 (前)</span>
-      </div>
-      <div class="card-desc">
-        北航飞行器设计博士，亿航智能飞控系统总工。主导<strong>eVTOL飞行控制系统研发与适航取证</strong>，完成国内首个载人无人驾驶航空器型号合格证（TC）的技术攻关。
-      </div>
-      <div class="card-industry">
-        <span class="industry-tag">eVTOL</span><span class="industry-tag">飞控系统</span><span class="industry-tag">适航取证</span><span class="industry-tag">无人机</span>
-      </div>
-    </div>
-    <div class="mentor-card">
-      <div class="card-top">
-        <div class="avatar female">C</div>
-        <div class="card-info">
-          <div class="card-name">Claire 罗女士</div>
-          <div class="card-title">低空空域管理政策专家</div>
-          <div class="card-school"><span class="school-icon">🎓</span> 南京航空航天大学 · 交通运输硕士</div>
-        </div>
-      </div>
-      <div class="card-stats">
-        <div class="stat-item">📅 <span class="stat-val">8年</span>从业</div>
-        <div class="stat-item"><span class="stat-val">空域管理</span></div><div class="stat-item"><span class="stat-val">UAM规划</span></div>
-      </div>
-      <div class="card-companies">
-        <span class="company-tag soe">中国民航局下属机构</span><span class="company-tag foreign">空管局 (借调)</span>
-      </div>
-      <div class="card-desc">
-        南航交通运输硕士，深度参与<strong>国家低空空域管理改革试点</strong>，起草多项低空经济政策与标准。为深圳、合肥等低空经济示范区提供城市空中交通（UAM）规划咨询。
-      </div>
-      <div class="card-industry">
-        <span class="industry-tag">空域管理</span><span class="industry-tag">UAM</span><span class="industry-tag">政策研究</span><span class="industry-tag">智慧城市</span>
-      </div>
-    </div>
-    <div class="mentor-card">
-      <div class="card-top">
-        <div class="avatar male">E</div>
-        <div class="card-info">
-          <div class="card-name">Ethan 田先生</div>
-          <div class="card-title">无人机编队控制专家</div>
-          <div class="card-school"><span class="school-icon">🎓</span> 国防科技大学 · 控制工程硕士</div>
-        </div>
-      </div>
-      <div class="card-stats">
-        <div class="stat-item">📅 <span class="stat-val">7年</span>从业</div>
-        <div class="stat-item"><span class="stat-val">千机编队</span></div><div class="stat-item"><span class="stat-val">集群智能</span></div>
-      </div>
-      <div class="card-companies">
-        <span class="company-tag foreign">大疆创新</span><span class="company-tag soe">航天科工 (前)</span>
-      </div>
-      <div class="card-desc">
-        国防科大控制工程硕士，大疆创新编队算法负责人。实现<strong>3000+架无人机同步编队飞行</strong>，多次完成央视春晚、奥运会等重大演出任务，编队精度达到厘米级。
-      </div>
-      <div class="card-industry">
-        <span class="industry-tag">无人机编队</span><span class="industry-tag">集群智能</span><span class="industry-tag">路径规划</span><span class="industry-tag">控制算法</span>
-      </div>
-    </div>
-    <div class="mentor-card">
-      <div class="card-top">
-        <div class="avatar female">V</div>
-        <div class="card-info">
-          <div class="card-name">Vivian 苏女士</div>
-          <div class="card-title">低空经济产业研究总监</div>
-          <div class="card-school"><span class="school-icon">🎓</span> 伦敦大学学院 · 城市规划硕士</div>
-        </div>
-      </div>
-      <div class="card-stats">
-        <div class="stat-item">📅 <span class="stat-val">9年</span>从业</div>
-        <div class="stat-item"><span class="stat-val">产业规划</span></div><div class="stat-item"><span class="stat-val">政策分析</span></div>
-      </div>
-      <div class="card-companies">
-        <span class="company-tag consulting">赛迪顾问</span><span class="company-tag consulting">罗兰贝格 (前)</span>
-      </div>
-      <div class="card-desc">
-        UCL城市规划硕士，赛迪顾问低空经济研究总监。为<strong>20+地方政府及产业园区</strong>提供低空经济产业规划，深度跟踪全球eVTOL、无人机物流等前沿赛道。
-      </div>
-      <div class="card-industry">
-        <span class="industry-tag">产业研究</span><span class="industry-tag">低空经济</span><span class="industry-tag">城市规划</span><span class="industry-tag">投资分析</span>
-      </div>
-    </div>
-    <div class="mentor-card">
-      <div class="card-top">
-        <div class="avatar male">L</div>
-        <div class="card-info">
-          <div class="card-name">Leo 唐先生</div>
-          <div class="card-title">无人机物流运营总监</div>
-          <div class="card-school"><span class="school-icon">🎓</span> 中山大学 · 物流管理硕士</div>
-        </div>
-      </div>
-      <div class="card-stats">
-        <div class="stat-item">📅 <span class="stat-val">8年</span>从业</div>
-        <div class="stat-item"><span class="stat-val">城市即时配送</span></div><div class="stat-item"><span class="stat-val">医疗物资</span></div>
-      </div>
-      <div class="card-companies">
-        <span class="company-tag big-tech">美团无人机</span><span class="company-tag foreign">顺丰丰翼 (前)</span>
-      </div>
-      <div class="card-desc">
-        中山大学物流硕士，美团无人机运营总监。搭建<strong>城市低空即时配送网络</strong>，在深圳、上海运营50+条常态化航线，累计完成订单<strong>超50万单</strong>，准点率99.2%。
-      </div>
-      <div class="card-industry">
-        <span class="industry-tag">无人机物流</span><span class="industry-tag">即时配送</span><span class="industry-tag">运营管理</span><span class="industry-tag">城市网络</span>
-      </div>
-    </div>
-    <div class="mentor-card">
-      <div class="card-top">
-        <div class="avatar female">N</div>
-        <div class="card-info">
-          <div class="card-name">Nora 彭女士</div>
-          <div class="card-title">航空电子系统工程师</div>
-          <div class="card-school"><span class="school-icon">🎓</span> 西北工业大学 · 电子工程硕士</div>
-        </div>
-      </div>
-      <div class="card-stats">
-        <div class="stat-item">📅 <span class="stat-val">10年</span>从业</div>
-        <div class="stat-item"><span class="stat-val">航电系统</span></div><div class="stat-item"><span class="stat-val">适航认证</span></div>
-      </div>
-      <div class="card-companies">
-        <span class="company-tag soe">中航工业</span><span class="company-tag foreign">霍尼韦尔 (前)</span>
-      </div>
-      <div class="card-desc">
-        西工大电子工程硕士，中航工业航电系统工程师。主导<strong>通用航空器综合航电系统</strong>设计与适航认证，成功将多款国产航电产品推向市场，打破国外垄断。
-      </div>
-      <div class="card-industry">
-        <span class="industry-tag">航电系统</span><span class="industry-tag">适航认证</span><span class="industry-tag">通用航空</span><span class="industry-tag">国产替代</span>
-      </div>
-    </div>
-  </div>
-</div>
+    </footer>
 
-<!-- ============ 高端智能制造 ============ -->
-<div class="section" data-category="hightech_mfg">
-  <div class="section-header">
-    <div class="section-icon" style="background:#f7fee7;">🏭</div>
-    <div class="section-title">高端智能制造</div>
-  </div>
-  <div class="mentor-grid">
-    <div class="mentor-card">
-      <div class="card-top">
-        <div class="avatar male">A</div>
-        <div class="card-info">
-          <div class="card-name">Alan 刘先生 <span class="badge-vip">首席导师</span></div>
-          <div class="card-title">工业4.0智能化总监</div>
-          <div class="card-school"><span class="school-icon">🎓</span> 同济大学 · 智能制造博士</div>
-        </div>
-      </div>
-      <div class="card-stats">
-        <div class="stat-item">📅 <span class="stat-val">13年</span>从业</div>
-        <div class="stat-item"><span class="stat-val">灯塔工厂</span></div><div class="stat-item"><span class="stat-val">数字孪生</span></div>
-      </div>
-      <div class="card-companies">
-        <span class="company-tag foreign">西门子</span><span class="company-tag foreign">博世 (前)</span>
-      </div>
-      <div class="card-desc">
-        同济大学智能制造博士，西门子工业4.0负责人。打造<strong>3座世界经济论坛「灯塔工厂」</strong>，通过数字孪生与AI质检将产线OEE从68%提升至92%。
-      </div>
-      <div class="card-industry">
-        <span class="industry-tag">工业4.0</span><span class="industry-tag">灯塔工厂</span><span class="industry-tag">数字孪生</span><span class="industry-tag">智能制造</span>
-      </div>
-    </div>
-    <div class="mentor-card">
-      <div class="card-top">
-        <div class="avatar female">Y</div>
-        <div class="card-info">
-          <div class="card-name">Yvonne 梁女士</div>
-          <div class="card-title">精密制造工艺专家</div>
-          <div class="card-school"><span class="school-icon">🎓</span> 哈尔滨工业大学 · 机械工程硕士</div>
-        </div>
-      </div>
-      <div class="card-stats">
-        <div class="stat-item">📅 <span class="stat-val">15年</span>从业</div>
-        <div class="stat-item"><span class="stat-val">微米级加工</span></div><div class="stat-item"><span class="stat-val">军工品质</span></div>
-      </div>
-      <div class="card-companies">
-        <span class="company-tag soe">中国航发</span><span class="company-tag foreign">沈阳机床 (前)</span>
-      </div>
-      <div class="card-desc">
-        哈工大机械硕士，中国航发精密加工专家。深耕<strong>航空发动机关键零部件精密制造</strong>，实现涡轮盘榫槽加工精度<strong>±2μm</strong>，达到国际一流水平。
-      </div>
-      <div class="card-industry">
-        <span class="industry-tag">精密加工</span><span class="industry-tag">航空制造</span><span class="industry-tag">CNC</span><span class="industry-tag">军工</span>
-      </div>
-    </div>
-    <div class="mentor-card">
-      <div class="card-top">
-        <div class="avatar male">T</div>
-        <div class="card-info">
-          <div class="card-name">Tiger 郑先生</div>
-          <div class="card-title">工业机器人研发总监</div>
-          <div class="card-school"><span class="school-icon">🎓</span> 上海交通大学 · 机器人学博士</div>
-        </div>
-      </div>
-      <div class="card-stats">
-        <div class="stat-item">📅 <span class="stat-val">10年</span>从业</div>
-        <div class="stat-item"><span class="stat-val">协作机器人</span></div><div class="stat-item"><span class="stat-val">SCARA</span></div>
-      </div>
-      <div class="card-companies">
-        <span class="company-tag foreign">节卡机器人</span><span class="company-tag foreign">ABB (前)</span>
-      </div>
-      <div class="card-desc">
-        上交大机器人学博士，节卡机器人研发总监。从0到1打造<strong>国产协作机器人产品线</strong>，对标UR、Franka，通过CE、UL认证，远销<strong>30+国家</strong>。
-      </div>
-      <div class="card-industry">
-        <span class="industry-tag">协作机器人</span><span class="industry-tag">工业机器人</span><span class="industry-tag">产品研发</span><span class="industry-tag">出口</span>
-      </div>
-    </div>
-    <div class="mentor-card">
-      <div class="card-top">
-        <div class="avatar female">R</div>
-        <div class="card-info">
-          <div class="card-name">Rose 陈女士</div>
-          <div class="card-title">质量体系与精益管理专家</div>
-          <div class="card-school"><span class="school-icon">🎓</span> 上海交通大学 · 工业工程硕士</div>
-        </div>
-      </div>
-      <div class="card-stats">
-        <div class="stat-item">📅 <span class="stat-val">12年</span>从业</div>
-        <div class="stat-item"><span class="stat-val">六西格玛黑带</span></div><div class="stat-item"><span class="stat-val">精益生产</span></div>
-      </div>
-      <div class="card-companies">
-        <span class="company-tag foreign">通用电气GE</span><span class="company-tag foreign">丹纳赫 (前)</span>
-      </div>
-      <div class="card-desc">
-        上交大工业工程硕士，GE精益管理专家。六西格玛黑带，运用<strong>DBS精益系统与六西格玛方法</strong>，在GE完成80+改善项目，累计节省<strong>$2000万+</strong>。
-      </div>
-      <div class="card-industry">
-        <span class="industry-tag">六西格玛</span><span class="industry-tag">精益生产</span><span class="industry-tag">DBS</span><span class="industry-tag">品质管理</span>
-      </div>
-    </div>
-    <div class="mentor-card">
-      <div class="card-top">
-        <div class="avatar male">A</div>
-        <div class="card-info">
-          <div class="card-name">Arthur 任先生</div>
-          <div class="card-title">增材制造(3D打印)总监</div>
-          <div class="card-school"><span class="school-icon">🎓</span> 华中科技大学 · 材料加工博士</div>
-        </div>
-      </div>
-      <div class="card-stats">
-        <div class="stat-item">📅 <span class="stat-val">9年</span>从业</div>
-        <div class="stat-item"><span class="stat-val">金属3D打印</span></div><div class="stat-item"><span class="stat-val">航空部件</span></div>
-      </div>
-      <div class="card-companies">
-        <span class="company-tag foreign">铂力特</span><span class="company-tag foreign">西安铂力特</span>
-      </div>
-      <div class="card-desc">
-        华科材料加工博士，铂力特增材制造总监。主导<strong>金属3D打印航空发动机叶片、航天结构件</strong>研发，实现复杂内流道一体化成形，已批量应用于国产大飞机项目。
-      </div>
-      <div class="card-industry">
-        <span class="industry-tag">3D打印</span><span class="industry-tag">增材制造</span><span class="industry-tag">金属粉末</span><span class="industry-tag">航空航天</span>
-      </div>
-    </div>
-    <div class="mentor-card">
-      <div class="card-top">
-        <div class="avatar female">C</div>
-        <div class="card-info">
-          <div class="card-name">Clara 邓女士</div>
-          <div class="card-title">工业视觉检测专家</div>
-          <div class="card-school"><span class="school-icon">🎓</span> 浙江大学 · 光学工程硕士</div>
-        </div>
-      </div>
-      <div class="card-stats">
-        <div class="stat-item">📅 <span class="stat-val">8年</span>从业</div>
-        <div class="stat-item"><span class="stat-val">AI缺陷检测</span></div><div class="stat-item"><span class="stat-val">半导体检测</span></div>
-      </div>
-      <div class="card-companies">
-        <span class="company-tag foreign">凌云光</span><span class="company-tag foreign">海康机器人 (前)</span>
-      </div>
-      <div class="card-desc">
-        浙大光学硕士，凌云光工业视觉专家。开发<strong>AI深度学习缺陷检测系统</strong>，应用于半导体晶圆、PCB、面板等行业，检测精度达<strong>亚微米级</strong>，漏检率低于0.01%。
-      </div>
-      <div class="card-industry">
-        <span class="industry-tag">机器视觉</span><span class="industry-tag">缺陷检测</span><span class="industry-tag">深度学习</span><span class="industry-tag">光学</span>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ============ 航空航天 ============ -->
-<div class="section" data-category="aerospace">
-  <div class="section-header">
-    <div class="section-icon" style="background:#f1f5f9;">🚀</div>
-    <div class="section-title">航空航天</div>
-  </div>
-  <div class="mentor-grid">
-    <div class="mentor-card">
-      <div class="card-top">
-        <div class="avatar male">C</div>
-        <div class="card-info">
-          <div class="card-name">Clark 赵先生 <span class="badge-vip">首席导师</span></div>
-          <div class="card-title">航天器总体设计副总师</div>
-          <div class="card-school"><span class="school-icon">🎓</span> 北京航空航天大学 · 飞行器设计博士</div>
-        </div>
-      </div>
-      <div class="card-stats">
-        <div class="stat-item">📅 <span class="stat-val">15年</span>从业</div>
-        <div class="stat-item"><span class="stat-val">卫星系统</span></div><div class="stat-item"><span class="stat-val">深空探测</span></div>
-      </div>
-      <div class="card-companies">
-        <span class="company-tag soe">中国航天科技集团</span><span class="company-tag foreign">中科院微小卫星</span>
-      </div>
-      <div class="card-desc">
-        北航博士，航天科技集团卫星副总师。参与<strong>北斗导航、嫦娥探月、天问火星探测</strong>等国家重大工程，负责卫星总体设计与系统集成，在轨交付成功率<strong>100%</strong>。
-      </div>
-      <div class="card-industry">
-        <span class="industry-tag">卫星设计</span><span class="industry-tag">深空探测</span><span class="industry-tag">航天工程</span><span class="industry-tag">系统集成</span>
-      </div>
-    </div>
-    <div class="mentor-card">
-      <div class="card-top">
-        <div class="avatar female">F</div>
-        <div class="card-info">
-          <div class="card-name">Faye 余女士</div>
-          <div class="card-title">运载火箭动力系统工程师</div>
-          <div class="card-school"><span class="school-icon">🎓</span> 西北工业大学 · 航空宇航推进博士</div>
-        </div>
-      </div>
-      <div class="card-stats">
-        <div class="stat-item">📅 <span class="stat-val">9年</span>从业</div>
-        <div class="stat-item"><span class="stat-val">液体火箭</span></div><div class="stat-item"><span class="stat-val">可重复使用</span></div>
-      </div>
-      <div class="card-companies">
-        <span class="company-tag soe">蓝箭航天</span><span class="company-tag soe">航天科工 (前)</span>
-      </div>
-      <div class="card-desc">
-        西工大推进博士，蓝箭航天动力系统核心工程师。参与<strong>朱雀二号液氧甲烷火箭</strong>发动机研制与多次发射任务，推动国产可重复使用火箭技术突破。
-      </div>
-      <div class="card-industry">
-        <span class="industry-tag">液体火箭</span><span class="industry-tag">发动机</span><span class="industry-tag">可重复使用</span><span class="industry-tag">商业航天</span>
-      </div>
-    </div>
-    <div class="mentor-card">
-      <div class="card-top">
-        <div class="avatar male">M</div>
-        <div class="card-info">
-          <div class="card-name">Mars 胡先生</div>
-          <div class="card-title">航空复合材料专家</div>
-          <div class="card-school"><span class="school-icon">🎓</span> 哈尔滨工业大学 · 复合材料硕士</div>
-        </div>
-      </div>
-      <div class="card-stats">
-        <div class="stat-item">📅 <span class="stat-val">12年</span>从业</div>
-        <div class="stat-item"><span class="stat-val">碳纤维结构</span></div><div class="stat-item"><span class="stat-val">C919项目</span></div>
-      </div>
-      <div class="card-companies">
-        <span class="company-tag soe">中国商飞</span><span class="company-tag soe">中航复材 (前)</span>
-      </div>
-      <div class="card-desc">
-        哈工大复合材料硕士，中国商飞结构工程师。负责<strong>C919大型客机复合材料机身段</strong>设计与适航验证，攻克碳纤维整体共固化成型等技术难关，减重<strong>15%</strong>。
-      </div>
-      <div class="card-industry">
-        <span class="industry-tag">复合材料</span><span class="industry-tag">碳纤维</span><span class="industry-tag">C919</span><span class="industry-tag">结构设计</span>
-      </div>
-    </div>
-    <div class="mentor-card">
-      <div class="card-top">
-        <div class="avatar female">S</div>
-        <div class="card-info">
-          <div class="card-name">Selena 沈女士</div>
-          <div class="card-title">航天测控系统专家</div>
-          <div class="card-school"><span class="school-icon">🎓</span> 国防科技大学 · 通信工程博士</div>
-        </div>
-      </div>
-      <div class="card-stats">
-        <div class="stat-item">📅 <span class="stat-val">11年</span>从业</div>
-        <div class="stat-item"><span class="stat-val">深空测控</span></div><div class="stat-item"><span class="stat-val">在轨管理</span></div>
-      </div>
-      <div class="card-companies">
-        <span class="company-tag soe">中国西安卫星测控中心</span><span class="company-tag foreign">中电科54所 (前)</span>
-      </div>
-      <div class="card-desc">
-        国防科大博士，卫星测控中心系统专家。管理<strong>200+在轨卫星测控任务</strong>，参与火星探测深空测控链路设计，测控距离覆盖地月空间及更远深空。
-      </div>
-      <div class="card-industry">
-        <span class="industry-tag">测控系统</span><span class="industry-tag">深空通信</span><span class="industry-tag">在轨管理</span><span class="industry-tag">航天测控</span>
-      </div>
-    </div>
-    <div class="mentor-card">
-      <div class="card-top">
-        <div class="avatar male">G</div>
-        <div class="card-info">
-          <div class="card-name">Gavin 谢先生</div>
-          <div class="card-title">航空发动机涡轮设计</div>
-          <div class="card-school"><span class="school-icon">🎓</span> 南京航空航天大学 · 动力工程硕士</div>
-        </div>
-      </div>
-      <div class="card-stats">
-        <div class="stat-item">📅 <span class="stat-val">10年</span>从业</div>
-        <div class="stat-item"><span class="stat-val">涡轮叶片</span></div><div class="stat-item"><span class="stat-val">气动设计</span></div>
-      </div>
-      <div class="card-companies">
-        <span class="company-tag soe">中国航发商发</span><span class="company-tag foreign">GE Aviation (前)</span>
-      </div>
-      <div class="card-desc">
-        南航动力硕士，中国航发商发涡轮设计师。参与<strong>国产大涵道比涡扇发动机</strong>涡轮部件设计，曾于GE Aviation参与LEAP发动机项目，掌握先进气动设计与冷却技术。
-      </div>
-      <div class="card-industry">
-        <span class="industry-tag">航空发动机</span><span class="industry-tag">涡轮设计</span><span class="industry-tag">气动</span><span class="industry-tag">国产替代</span>
-      </div>
-    </div>
-    <div class="mentor-card">
-      <div class="card-top">
-        <div class="avatar female">A</div>
-        <div class="card-info">
-          <div class="card-name">Ariel 徐女士</div>
-          <div class="card-title">航天电子载荷设计师</div>
-          <div class="card-school"><span class="school-icon">🎓</span> 中国科学院大学 · 空间物理博士</div>
-        </div>
-      </div>
-      <div class="card-stats">
-        <div class="stat-item">📅 <span class="stat-val">7年</span>从业</div>
-        <div class="stat-item"><span class="stat-val">遥感载荷</span></div><div class="stat-item"><span class="stat-val">空间科学</span></div>
-      </div>
-      <div class="card-companies">
-        <span class="company-tag foreign">中科院空间应用中心</span><span class="company-tag soe">航天五院 (前)</span>
-      </div>
-      <div class="card-desc">
-        中科院空间物理博士，主导<strong>高光谱遥感、空间科学探测载荷</strong>设计，搭载于天宫空间站及多颗科学卫星，多项探测指标达到<strong>国际领先水平</strong>。
-      </div>
-      <div class="card-industry">
-        <span class="industry-tag">遥感载荷</span><span class="industry-tag">空间探测</span><span class="industry-tag">光学设计</span><span class="industry-tag">空间站</span>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ============ 私募证券基金 ============ -->
-<div class="section" data-category="pe_fund">
-  <div class="section-header">
-    <div class="section-icon" style="background:#fffbeb;">📊</div>
-    <div class="section-title">私募证券基金</div>
-  </div>
-  <div class="mentor-grid">
-    <div class="mentor-card">
-      <div class="card-top">
-        <div class="avatar male">V</div>
-        <div class="card-info">
-          <div class="card-name">Vincent 陈先生 <span class="badge-vip">首席导师</span></div>
-          <div class="card-title">对冲基金合伙人 / 多空策略</div>
-          <div class="card-school"><span class="school-icon">🎓</span> 哥伦比亚大学 · 金融工程硕士</div>
-        </div>
-      </div>
-      <div class="card-stats">
-        <div class="stat-item">📅 <span class="stat-val">14年</span>从业</div>
-        <div class="stat-item"><span class="stat-val">$50亿AUM</span></div><div class="stat-item"><span class="stat-val">年化25%+</span></div>
-      </div>
-      <div class="card-companies">
-        <span class="company-tag finance">景林资产</span><span class="company-tag finance">高瓴资本 (前)</span><span class="company-tag finance">Millennium (前)</span>
-      </div>
-      <div class="card-desc">
-        哥大金工硕士，景林资产合伙人。管理<strong>$50亿多空策略组合</strong>，历史年化收益25%+，回撤控制在15%以内。深度覆盖A股、港股、美股三地市场。
-      </div>
-      <div class="card-industry">
-        <span class="industry-tag">对冲基金</span><span class="industry-tag">多空策略</span><span class="industry-tag">基本面</span><span class="industry-tag">三地市场</span>
-      </div>
-    </div>
-    <div class="mentor-card">
-      <div class="card-top">
-        <div class="avatar female">J</div>
-        <div class="card-info">
-          <div class="card-name">Janet 汪女士</div>
-          <div class="card-title">量化基金经理 / CTA策略</div>
-          <div class="card-school"><span class="school-icon">🎓</span> 斯坦福大学 · 统计学博士</div>
-        </div>
-      </div>
-      <div class="card-stats">
-        <div class="stat-item">📅 <span class="stat-val">10年</span>从业</div>
-        <div class="stat-item"><span class="stat-val">管理期货</span></div><div class="stat-item"><span class="stat-val">年化波动8%</span></div>
-      </div>
-      <div class="card-companies">
-        <span class="company-tag finance">九坤投资</span><span class="company-tag finance">Two Sigma (前)</span>
-      </div>
-      <div class="card-desc">
-        斯坦福统计学博士，九坤投资CTA策略负责人。管理<strong>百亿级别量化CTA组合</strong>，策略涵盖趋势跟踪、统计套利、跨品种对冲，年化波动率控制在<strong>8%以内</strong>。
-      </div>
-      <div class="card-industry">
-        <span class="industry-tag">CTA</span><span class="industry-tag">量化交易</span><span class="industry-tag">统计套利</span><span class="industry-tag">期货</span>
-      </div>
-    </div>
-    <div class="mentor-card">
-      <div class="card-top">
-        <div class="avatar male">A</div>
-        <div class="card-info">
-          <div class="card-name">Alex 许先生</div>
-          <div class="card-title">权益研究总监</div>
-          <div class="card-school"><span class="school-icon">🎓</span> 清华大学 · 经济学硕士</div>
-        </div>
-      </div>
-      <div class="card-stats">
-        <div class="stat-item">📅 <span class="stat-val">11年</span>从业</div>
-        <div class="stat-item"><span class="stat-val">TMT行业</span></div><div class="stat-item"><span class="stat-val">30+覆盖标的</span></div>
-      </div>
-      <div class="card-companies">
-        <span class="company-tag finance">淡水泉投资</span><span class="company-tag finance">中金公司 (前)</span>
-      </div>
-      <div class="card-desc">
-        清华经济学硕士，淡水泉权益研究总监。深度覆盖<strong>TMT、新能源、高端制造</strong>三大赛道30+核心标的，挖掘多只十倍股，研究驱动投资回报率行业前10%。
-      </div>
-      <div class="card-industry">
-        <span class="industry-tag">权益研究</span><span class="industry-tag">TMT</span><span class="industry-tag">新能源</span><span class="industry-tag">价值投资</span>
-      </div>
-    </div>
-    <div class="mentor-card">
-      <div class="card-top">
-        <div class="avatar female">M</div>
-        <div class="card-info">
-          <div class="card-name">Maggie 卢女士</div>
-          <div class="card-title">固收与宏观策略师</div>
-          <div class="card-school"><span class="school-icon">🎓</span> 北京大学 · 金融学博士</div>
-        </div>
-      </div>
-      <div class="card-stats">
-        <div class="stat-item">📅 <span class="stat-val">9年</span>从业</div>
-        <div class="stat-item"><span class="stat-val">宏观对冲</span></div><div class="stat-item"><span class="stat-val">利率债</span></div>
-      </div>
-      <div class="card-companies">
-        <span class="company-tag finance">乐瑞资产</span><span class="company-tag finance">中金固收 (前)</span>
-      </div>
-      <div class="card-desc">
-        北大金融博士，乐瑞资产宏观策略师。管理<strong>百亿固收+宏观对冲组合</strong>，精准预判多轮利率周期，近年来连续实现<strong>正收益</strong>，Sharpe比率超2.0。
-      </div>
-      <div class="card-industry">
-        <span class="industry-tag">固收</span><span class="industry-tag">宏观对冲</span><span class="industry-tag">利率策略</span><span class="industry-tag">大类资产</span>
-      </div>
-    </div>
-    <div class="mentor-card">
-      <div class="card-top">
-        <div class="avatar male">R</div>
-        <div class="card-info">
-          <div class="card-name">Ray 张先生</div>
-          <div class="card-title">量化研究员 / 因子投资</div>
-          <div class="card-school"><span class="school-icon">🎓</span> 麻省理工学院 · 金融硕士</div>
-        </div>
-      </div>
-      <div class="card-stats">
-        <div class="stat-item">📅 <span class="stat-val">7年</span>从业</div>
-        <div class="stat-item"><span class="stat-val">多因子模型</span></div><div class="stat-item"><span class="stat-val">高频数据</span></div>
-      </div>
-      <div class="card-companies">
-        <span class="company-tag finance">幻方量化</span><span class="company-tag finance">WorldQuant (前)</span>
-      </div>
-      <div class="card-desc">
-        MIT金融硕士，幻方量化核心研究员。构建<strong>300+因子的多因子选股模型</strong>，融合基本面、量价与另类数据，IC均值<strong>0.08+</strong>，实盘超额收益稳定。
-      </div>
-      <div class="card-industry">
-        <span class="industry-tag">因子投资</span><span class="industry-tag">多因子</span><span class="industry-tag">高频数据</span><span class="industry-tag">另类数据</span>
-      </div>
-    </div>
-    <div class="mentor-card">
-      <div class="card-top">
-        <div class="avatar female">S</div>
-        <div class="card-info">
-          <div class="card-name">Sally 程女士</div>
-          <div class="card-title">风控合规总监</div>
-          <div class="card-school"><span class="school-icon">🎓</span> 复旦大学 · 法学+会计双学位</div>
-        </div>
-      </div>
-      <div class="card-stats">
-        <div class="stat-item">📅 <span class="stat-val">8年</span>从业</div>
-        <div class="stat-item"><span class="stat-val">合规体系</span></div><div class="stat-item"><span class="stat-val">监管沟通</span></div>
-      </div>
-      <div class="card-companies">
-        <span class="company-tag finance">重阳投资</span><span class="company-tag finance">基金业协会 (借调)</span>
-      </div>
-      <div class="card-desc">
-        复旦法学+会计双学位，重阳投资风控合规总监。搭建<strong>私募基金全流程合规风控体系</strong>，覆盖投前尽调、投中监控、投后管理，确保零监管处罚记录。
-      </div>
-      <div class="card-industry">
-        <span class="industry-tag">合规</span><span class="industry-tag">风控</span><span class="industry-tag">私募监管</span><span class="industry-tag">法务</span>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ============ 合成生物 ============ -->
-<div class="section" data-category="synbio">
-  <div class="section-header">
-    <div class="section-icon" style="background:#f0fdf4;">🧪</div>
-    <div class="section-title">合成生物</div>
-  </div>
-  <div class="mentor-grid">
-    <div class="mentor-card">
-      <div class="card-top">
-        <div class="avatar male">D</div>
-        <div class="card-info">
-          <div class="card-name">Derek 何先生 <span class="badge-vip">首席导师</span></div>
-          <div class="card-title">合成生物学研发VP</div>
-          <div class="card-school"><span class="school-icon">🎓</span> 麻省理工学院 · 生物工程博士</div>
-        </div>
-      </div>
-      <div class="card-stats">
-        <div class="stat-item">📅 <span class="stat-val">12年</span>从业</div>
-        <div class="stat-item"><span class="stat-val">基因线路设计</span></div><div class="stat-item"><span class="stat-val">细胞工厂</span></div>
-      </div>
-      <div class="card-companies">
-        <span class="company-tag soe">华大智造</span><span class="company-tag foreign">Ginkgo Bioworks (前)</span><span class="company-tag foreign">Zymergen (前)</span>
-      </div>
-      <div class="card-desc">
-        MIT生物工程博士，华大智造合成生物学VP。主导<strong>微生物细胞工厂设计与代谢通路优化</strong>，成功将多个高价值化合物的产量提升至<strong>g/L级</strong>，推动产业化落地。
-      </div>
-      <div class="card-industry">
-        <span class="industry-tag">合成生物学</span><span class="industry-tag">代谢工程</span><span class="industry-tag">细胞工厂</span><span class="industry-tag">产业化</span>
-      </div>
-    </div>
-    <div class="mentor-card">
-      <div class="card-top">
-        <div class="avatar female">E</div>
-        <div class="card-info">
-          <div class="card-name">Elsa 韩女士</div>
-          <div class="card-title">酶工程与蛋白质设计专家</div>
-          <div class="card-school"><span class="school-icon">🎓</span> 剑桥大学 · 生物化学博士</div>
-        </div>
-      </div>
-      <div class="card-stats">
-        <div class="stat-item">📅 <span class="stat-val">8年</span>从业</div>
-        <div class="stat-item"><span class="stat-val">AI蛋白质设计</span></div><div class="stat-item"><span class="stat-val">定向进化</span></div>
-      </div>
-      <div class="card-companies">
-        <span class="company-tag foreign">晶泰科技</span><span class="company-tag foreign">DeepMind (合作)</span>
-      </div>
-      <div class="card-desc">
-        剑桥生物化学博士，晶泰科技酶工程负责人。运用<strong>AI蛋白质结构预测与定向进化</strong>技术，设计新型工业酶催化剂，催化效率提升<strong>100倍+</strong>。
-      </div>
-      <div class="card-industry">
-        <span class="industry-tag">酶工程</span><span class="industry-tag">蛋白质设计</span><span class="industry-tag">AI</span><span class="industry-tag">定向进化</span>
-      </div>
-    </div>
-    <div class="mentor-card">
-      <div class="card-top">
-        <div class="avatar male">T</div>
-        <div class="card-info">
-          <div class="card-name">Theo 袁先生</div>
-          <div class="card-title">DNA合成技术总监</div>
-          <div class="card-school"><span class="school-icon">🎓</span> 北京大学 · 化学生物学博士</div>
-        </div>
-      </div>
-      <div class="card-stats">
-        <div class="stat-item">📅 <span class="stat-val">9年</span>从业</div>
-        <div class="stat-item"><span class="stat-val">高通量合成</span></div><div class="stat-item"><span class="stat-val">长片段DNA</span></div>
-      </div>
-      <div class="card-companies">
-        <span class="company-tag foreign">擎科生物</span><span class="company-tag foreign">Twist Bioscience (前)</span>
-      </div>
-      <div class="card-desc">
-        北大化学生物学博士，擎科生物DNA合成总监。攻克<strong>超长片段DNA（>10kb）高通量合成</strong>技术，错误率降至万分之一以下，服务全球<strong>5000+实验室</strong>。
-      </div>
-      <div class="card-industry">
-        <span class="industry-tag">DNA合成</span><span class="industry-tag">高通量</span><span class="industry-tag">基因合成</span><span class="industry-tag">平台技术</span>
-      </div>
-    </div>
-    <div class="mentor-card">
-      <div class="card-top">
-        <div class="avatar female">A</div>
-        <div class="card-info">
-          <div class="card-name">Amber 石女士</div>
-          <div class="card-title">发酵工艺放大专家</div>
-          <div class="card-school"><span class="school-icon">🎓</span> 华东理工大学 · 生物工程博士</div>
-        </div>
-      </div>
-      <div class="card-stats">
-        <div class="stat-item">📅 <span class="stat-val">11年</span>从业</div>
-        <div class="stat-item"><span class="stat-val">吨级发酵</span></div><div class="stat-item"><span class="stat-val">连续流</span></div>
-      </div>
-      <div class="card-companies">
-        <span class="company-tag foreign">凯赛生物</span><span class="company-tag foreign">DSM 帝斯曼 (前)</span>
-      </div>
-      <div class="card-desc">
-        华理生物工程博士，凯赛生物发酵工艺负责人。完成<strong>多款产品从实验室到吨级发酵罐</strong>的工艺放大，建立连续流生物制造平台，生产成本降低<strong>60%</strong>。
-      </div>
-      <div class="card-industry">
-        <span class="industry-tag">发酵工程</span><span class="industry-tag">工艺放大</span><span class="industry-tag">生物制造</span><span class="industry-tag">连续流</span>
-      </div>
-    </div>
-    <div class="mentor-card">
-      <div class="card-top">
-        <div class="avatar male">I</div>
-        <div class="card-info">
-          <div class="card-name">Ivan 宋先生</div>
-          <div class="card-title">合成生物产品商业化总监</div>
-          <div class="card-school"><span class="school-icon">🎓</span> 芝加哥大学 · MBA</div>
-        </div>
-      </div>
-      <div class="card-stats">
-        <div class="stat-item">📅 <span class="stat-val">10年</span>从业</div>
-        <div class="stat-item"><span class="stat-val">市场准入</span></div><div class="stat-item"><span class="stat-val">商业化路径</span></div>
-      </div>
-      <div class="card-companies">
-        <span class="company-tag foreign">华熙生物</span><span class="company-tag foreign">蓝晶微生物 (前)</span>
-      </div>
-      <div class="card-desc">
-        芝加哥大学MBA，华熙生物合成生物商业化负责人。成功推动<strong>透明质酸、麦角硫因等10+合成生物产品</strong>从实验室走向市场，年营收贡献超<strong>20亿元</strong>。
-      </div>
-      <div class="card-industry">
-        <span class="industry-tag">商业化</span><span class="industry-tag">市场准入</span><span class="industry-tag">产业化</span><span class="industry-tag">产品经理</span>
-      </div>
-    </div>
-    <div class="mentor-card">
-      <div class="card-top">
-        <div class="avatar female">L</div>
-        <div class="card-info">
-          <div class="card-name">Luna 姜女士</div>
-          <div class="card-title">合成生物法规与注册总监</div>
-          <div class="card-school"><span class="school-icon">🎓</span> 中国药科大学 · 药学硕士</div>
-        </div>
-      </div>
-      <div class="card-stats">
-        <div class="stat-item">📅 <span class="stat-val">8年</span>从业</div>
-        <div class="stat-item"><span class="stat-val">NMPA注册</span></div><div class="stat-item"><span class="stat-val">新食品原料</span></div>
-      </div>
-      <div class="card-companies">
-        <span class="company-tag foreign">嘉必优</span><span class="company-tag foreign">卫健委专家 (顾问)</span>
-      </div>
-      <div class="card-desc">
-        中国药科大学药学硕士，嘉必优法规注册总监。累计完成<strong>15+新食品原料及化妆品新原料</strong>注册申报，深度参与合成生物学产品监管政策研讨。
-      </div>
-      <div class="card-industry">
-        <span class="industry-tag">法规注册</span><span class="industry-tag">新食品原料</span><span class="industry-tag">NMPA</span><span class="industry-tag">GRAS</span>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ============ 云计算大数据 ============ -->
-<div class="section" data-category="cloud_data">
-  <div class="section-header">
-    <div class="section-icon" style="background:#eff6ff;">☁️</div>
-    <div class="section-title">云计算大数据</div>
-  </div>
-  <div class="mentor-grid">
-    <div class="mentor-card">
-      <div class="card-top">
-        <div class="avatar male">T</div>
-        <div class="card-info">
-          <div class="card-name">Tony 魏先生 <span class="badge-vip">首席导师</span></div>
-          <div class="card-title">云原生架构师 / K8s专家</div>
-          <div class="card-school"><span class="school-icon">🎓</span> 浙江大学 · 计算机硕士</div>
-        </div>
-      </div>
-      <div class="card-stats">
-        <div class="stat-item">📅 <span class="stat-val">9年</span>从业</div>
-        <div class="stat-item"><span class="stat-val">万级K8s集群</span></div><div class="stat-item"><span class="stat-val">服务网格</span></div>
-      </div>
-      <div class="card-companies">
-        <span class="company-tag big-tech">阿里云</span><span class="company-tag foreign">Uber (前)</span>
-      </div>
-      <div class="card-desc">
-        浙大计算机硕士，阿里云容器服务架构师。设计<strong>万级节点Kubernetes超大规模集群</strong>调度系统，支撑双11峰值<strong>千万QPS</strong>，服务全球500强客户。
-      </div>
-      <div class="card-industry">
-        <span class="industry-tag">Kubernetes</span><span class="industry-tag">云原生</span><span class="industry-tag">服务网格</span><span class="industry-tag">容器</span>
-      </div>
-    </div>
-    <div class="mentor-card">
-      <div class="card-top">
-        <div class="avatar female">C</div>
-        <div class="card-info">
-          <div class="card-name">Chloe 万女士</div>
-          <div class="card-title">大数据平台技术总监</div>
-          <div class="card-school"><span class="school-icon">🎓</span> 中国科学技术大学 · 数据科学硕士</div>
-        </div>
-      </div>
-      <div class="card-stats">
-        <div class="stat-item">📅 <span class="stat-val">10年</span>从业</div>
-        <div class="stat-item"><span class="stat-val">EB级数据湖</span></div><div class="stat-item"><span class="stat-val">实时计算</span></div>
-      </div>
-      <div class="card-companies">
-        <span class="company-tag big-tech">字节跳动</span><span class="company-tag big-tech">美团 (前)</span>
-      </div>
-      <div class="card-desc">
-        中科大硕士，字节跳动数据平台技术总监。搭建<strong>EB级数据湖与实时计算体系</strong>，支撑全公司数据驱动决策，日均处理数据量<strong>超100PB</strong>。
-      </div>
-      <div class="card-industry">
-        <span class="industry-tag">大数据</span><span class="industry-tag">数据湖</span><span class="industry-tag">实时计算</span><span class="industry-tag">Spark/Flink</span>
-      </div>
-    </div>
-    <div class="mentor-card">
-      <div class="card-top">
-        <div class="avatar male">R</div>
-        <div class="card-info">
-          <div class="card-name">Rex 邹先生</div>
-          <div class="card-title">数据库内核研发</div>
-          <div class="card-school"><span class="school-icon">🎓</span> 卡内基梅隆大学 · 数据库硕士</div>
-        </div>
-      </div>
-      <div class="card-stats">
-        <div class="stat-item">📅 <span class="stat-val">8年</span>从业</div>
-        <div class="stat-item"><span class="stat-val">分布式数据库</span></div><div class="stat-item"><span class="stat-val">HTAP</span></div>
-      </div>
-      <div class="card-companies">
-        <span class="company-tag foreign">PingCAP</span><span class="company-tag foreign">Snowflake (前)</span>
-      </div>
-      <div class="card-desc">
-        CMU数据库硕士，PingCAP TiDB内核开发者。负责<strong>分布式HTAP数据库核心引擎</strong>研发，曾参与Snowflake存算分离架构设计，贡献多个开源项目。
-      </div>
-      <div class="card-industry">
-        <span class="industry-tag">数据库</span><span class="industry-tag">TiDB</span><span class="industry-tag">HTAP</span><span class="industry-tag">分布式</span>
-      </div>
-    </div>
-    <div class="mentor-card">
-      <div class="card-top">
-        <div class="avatar female">E</div>
-        <div class="card-info">
-          <div class="card-name">Ella 洪女士</div>
-          <div class="card-title">MLOps平台负责人</div>
-          <div class="card-school"><span class="school-icon">🎓</span> 复旦大学 · 软件工程硕士</div>
-        </div>
-      </div>
-      <div class="card-stats">
-        <div class="stat-item">📅 <span class="stat-val">7年</span>从业</div>
-        <div class="stat-item"><span class="stat-val">模型全生命周期</span></div><div class="stat-item"><span class="stat-val">AutoML</span></div>
-      </div>
-      <div class="card-companies">
-        <span class="company-tag big-tech">百度</span><span class="company-tag big-tech">网易 (前)</span>
-      </div>
-      <div class="card-desc">
-        复旦软件硕士，百度MLOps平台负责人。构建<strong>模型训练-部署-监控全生命周期管理平台</strong>，集成AutoML能力，支撑<strong>5000+模型</strong>的生产化运行。
-      </div>
-      <div class="card-industry">
-        <span class="industry-tag">MLOps</span><span class="industry-tag">AutoML</span><span class="industry-tag">模型管理</span><span class="industry-tag">平台工程</span>
-      </div>
-    </div>
-    <div class="mentor-card">
-      <div class="card-top">
-        <div class="avatar male">M</div>
-        <div class="card-info">
-          <div class="card-name">Max 丁先生</div>
-          <div class="card-title">云计算安全架构师</div>
-          <div class="card-school"><span class="school-icon">🎓</span> 北京航空航天大学 · 信息安全本科</div>
-        </div>
-      </div>
-      <div class="card-stats">
-        <div class="stat-item">📅 <span class="stat-val">9年</span>从业</div>
-        <div class="stat-item"><span class="stat-val">零信任云</span></div><div class="stat-item"><span class="stat-val">数据加密</span></div>
-      </div>
-      <div class="card-companies">
-        <span class="company-tag big-tech">华为云</span><span class="company-tag big-tech">腾讯云 (前)</span>
-      </div>
-      <div class="card-desc">
-        北航信息安全背景，华为云安全架构师。设计<strong>云平台多层纵深防御体系</strong>，构建自研密钥管理服务（KMS）与硬件安全模块（HSM），通过PCI-DSS、SOC2认证。
-      </div>
-      <div class="card-industry">
-        <span class="industry-tag">云安全</span><span class="industry-tag">加密</span><span class="industry-tag">KMS</span><span class="industry-tag">等保合规</span>
-      </div>
-    </div>
-    <div class="mentor-card">
-      <div class="card-top">
-        <div class="avatar female">M</div>
-        <div class="card-info">
-          <div class="card-name">Mia 顾女士</div>
-          <div class="card-title">数据仓库与BI总监</div>
-          <div class="card-school"><span class="school-icon">🎓</span> 中国人民大学 · 统计学硕士</div>
-        </div>
-      </div>
-      <div class="card-stats">
-        <div class="stat-item">📅 <span class="stat-val">11年</span>从业</div>
-        <div class="stat-item"><span class="stat-val">数据治理</span></div><div class="stat-item"><span class="stat-val">BI体系</span></div>
-      </div>
-      <div class="card-companies">
-        <span class="company-tag big-tech">京东</span><span class="company-tag big-tech">快手 (前)</span>
-      </div>
-      <div class="card-desc">
-        人大统计学硕士，京东数据仓库负责人。主导<strong>集团级数据治理与商业智能体系</strong>建设，统一200+业务线数据口径，赋能管理层决策效率提升<strong>50%+</strong>。
-      </div>
-      <div class="card-industry">
-        <span class="industry-tag">数据仓库</span><span class="industry-tag">BI</span><span class="industry-tag">数据治理</span><span class="industry-tag">商业分析</span>
-      </div>
-    </div>
-    <div class="mentor-card">
-      <div class="card-top">
-        <div class="avatar male">S</div>
-        <div class="card-info">
-          <div class="card-name">Shawn 卢先生</div>
-          <div class="card-title">Serverless架构师</div>
-          <div class="card-school"><span class="school-icon">🎓</span> 华中科技大学 · 计算机硕士</div>
-        </div>
-      </div>
-      <div class="card-stats">
-        <div class="stat-item">📅 <span class="stat-val">8年</span>从业</div>
-        <div class="stat-item"><span class="stat-val">Serverless</span></div><div class="stat-item"><span class="stat-val">边缘计算</span></div>
-      </div>
-      <div class="card-companies">
-        <span class="company-tag big-tech">腾讯云</span><span class="company-tag foreign">AWS Lambda (前)</span>
-      </div>
-      <div class="card-desc">
-        华科计算机硕士，腾讯云Serverless架构师。主导<strong>云函数与边缘计算平台</strong>设计，支持百万级并发调用，冷启动延迟优化至<strong>50ms以内</strong>。
-      </div>
-      <div class="card-industry">
-        <span class="industry-tag">Serverless</span><span class="industry-tag">边缘计算</span><span class="industry-tag">FaaS</span><span class="industry-tag">低延迟</span>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ============ 新能源双碳 ============ -->
-<div class="section" data-category="newenergy">
-  <div class="section-header">
-    <div class="section-icon" style="background:#f0fdf4;">⚡</div>
-    <div class="section-title">新能源双碳</div>
-  </div>
-  <div class="mentor-grid">
-    <div class="mentor-card">
-      <div class="card-top">
-        <div class="avatar male">D</div>
-        <div class="card-info">
-          <div class="card-name">Davis 董先生 <span class="badge-vip">首席导师</span></div>
-          <div class="card-title">光伏电站开发总监</div>
-          <div class="card-school"><span class="school-icon">🎓</span> 华北电力大学 · 电力系统硕士</div>
-        </div>
-      </div>
-      <div class="card-stats">
-        <div class="stat-item">📅 <span class="stat-val">12年</span>从业</div>
-        <div class="stat-item"><span class="stat-val">5GW+项目</span></div><div class="stat-item"><span class="stat-val">海外EPC</span></div>
-      </div>
-      <div class="card-companies">
-        <span class="company-tag soe">隆基绿能</span><span class="company-tag foreign">天合光能 (前)</span>
-      </div>
-      <div class="card-desc">
-        华北电力大学硕士，隆基绿能电站开发总监。主导<strong>国内及中东、拉美5GW+光伏电站</strong>开发与建设，精通项目融资、EPC管理及并网全流程，项目IRR行业领先。
-      </div>
-      <div class="card-industry">
-        <span class="industry-tag">光伏</span><span class="industry-tag">电站开发</span><span class="industry-tag">EPC</span><span class="industry-tag">海外市场</span>
-      </div>
-    </div>
-    <div class="mentor-card">
-      <div class="card-top">
-        <div class="avatar female">R</div>
-        <div class="card-info">
-          <div class="card-name">Rita 夏女士</div>
-          <div class="card-title">储能系统产品经理</div>
-          <div class="card-school"><span class="school-icon">🎓</span> 西安交通大学 · 电气工程硕士</div>
-        </div>
-      </div>
-      <div class="card-stats">
-        <div class="stat-item">📅 <span class="stat-val">9年</span>从业</div>
-        <div class="stat-item"><span class="stat-val">工商业储能</span></div><div class="stat-item"><span class="stat-val">钠离子电池</span></div>
-      </div>
-      <div class="card-companies">
-        <span class="company-tag soe">宁德时代</span><span class="company-tag foreign">比亚迪 (前)</span>
-      </div>
-      <div class="card-desc">
-        西交大电气硕士，宁德时代储能产品经理。从0到1定义<strong>工商业液冷储能系统</strong>产品线，支持多家客户实现峰谷套利ROI<strong>5年内回收</strong>。
-      </div>
-      <div class="card-industry">
-        <span class="industry-tag">储能</span><span class="industry-tag">液冷系统</span><span class="industry-tag">产品定义</span><span class="industry-tag">工商业</span>
-      </div>
-    </div>
-    <div class="mentor-card">
-      <div class="card-top">
-        <div class="avatar male">G</div>
-        <div class="card-info">
-          <div class="card-name">Green 严先生</div>
-          <div class="card-title">碳交易与碳资产管理</div>
-          <div class="card-school"><span class="school-icon">🎓</span> 清华大学 · 环境工程硕士</div>
-        </div>
-      </div>
-      <div class="card-stats">
-        <div class="stat-item">📅 <span class="stat-val">8年</span>从业</div>
-        <div class="stat-item"><span class="stat-val">CCER开发</span></div><div class="stat-item"><span class="stat-val">碳配额交易</span></div>
-      </div>
-      <div class="card-companies">
-        <span class="company-tag foreign">中碳登</span><span class="company-tag foreign">北京绿色交易所 (前)</span>
-      </div>
-      <div class="card-desc">
-        清华环境硕士，中碳登碳资产负责人。主导<strong>50+CCER项目开发与碳配额交易</strong>，管理企业碳资产规模超<strong>5000万吨</strong>，深度参与全国碳市场制度设计。
-      </div>
-      <div class="card-industry">
-        <span class="industry-tag">碳交易</span><span class="industry-tag">CCER</span><span class="industry-tag">碳资产</span><span class="industry-tag">全国碳市场</span>
-      </div>
-    </div>
-    <div class="mentor-card">
-      <div class="card-top">
-        <div class="avatar female">F</div>
-        <div class="card-info">
-          <div class="card-name">Fiona 孔女士</div>
-          <div class="card-title">锂电池研发科学家</div>
-          <div class="card-school"><span class="school-icon">🎓</span> 中国科学院大学 · 材料学博士</div>
-        </div>
-      </div>
-      <div class="card-stats">
-        <div class="stat-item">📅 <span class="stat-val">7年</span>从业</div>
-        <div class="stat-item"><span class="stat-val">固态电池</span></div><div class="stat-item"><span class="stat-val">界面工程</span></div>
-      </div>
-      <div class="card-companies">
-        <span class="company-tag foreign">卫蓝新能源</span><span class="company-tag soe">宁德时代 (前)</span>
-      </div>
-      <div class="card-desc">
-        中科院材料学博士，卫蓝新能源固态电池研发科学家。攻克<strong>固态电解质-电极界面兼容性</strong>关键难题，推动固态电池能量密度突破<strong>400Wh/kg</strong>。
-      </div>
-      <div class="card-industry">
-        <span class="industry-tag">固态电池</span><span class="industry-tag">电解质</span><span class="industry-tag">界面工程</span><span class="industry-tag">电化学</span>
-      </div>
-    </div>
-    <div class="mentor-card">
-      <div class="card-top">
-        <div class="avatar male">H</div>
-        <div class="card-info">
-          <div class="card-name">Hank 廖先生</div>
-          <div class="card-title">氢能燃料电池技术专家</div>
-          <div class="card-school"><span class="school-icon">🎓</span> 同济大学 · 新能源博士</div>
-        </div>
-      </div>
-      <div class="card-stats">
-        <div class="stat-item">📅 <span class="stat-val">10年</span>从业</div>
-        <div class="stat-item"><span class="stat-val">PEM电解槽</span></div><div class="stat-item"><span class="stat-val">氢储能</span></div>
-      </div>
-      <div class="card-companies">
-        <span class="company-tag foreign">亿华通</span><span class="company-tag foreign">国鸿氢能 (前)</span>
-      </div>
-      <div class="card-desc">
-        同济新能源博士，亿华通燃料电池技术负责人。主导<strong>大功率PEM电解槽与燃料电池系统</strong>研发，产品应用于公交、重卡、船舶等多场景，累计装机<strong>超5000台</strong>。
-      </div>
-      <div class="card-industry">
-        <span class="industry-tag">氢能</span><span class="industry-tag">燃料电池</span><span class="industry-tag">电解槽</span><span class="industry-tag">绿色交通</span>
-      </div>
-    </div>
-    <div class="mentor-card">
-      <div class="card-top">
-        <div class="avatar female">V</div>
-        <div class="card-info">
-          <div class="card-name">Vera 潘女士</div>
-          <div class="card-title">能源互联网与虚拟电厂</div>
-          <div class="card-school"><span class="school-icon">🎓</span> 上海交通大学 · 电力系统博士</div>
-        </div>
-      </div>
-      <div class="card-stats">
-        <div class="stat-item">📅 <span class="stat-val">8年</span>从业</div>
-        <div class="stat-item"><span class="stat-val">虚拟电厂</span></div><div class="stat-item"><span class="stat-val">需求响应</span></div>
-      </div>
-      <div class="card-companies">
-        <span class="company-tag soe">国网综能</span><span class="company-tag foreign">远景能源 (前)</span>
-      </div>
-      <div class="card-desc">
-        上交大电力系统博士，国网综能虚拟电厂架构师。搭建<strong>百万千瓦级虚拟电厂聚合平台</strong>，整合分布式光伏、储能、充电桩等灵活性资源，参与电力现货市场交易。
-      </div>
-      <div class="card-industry">
-        <span class="industry-tag">虚拟电厂</span><span class="industry-tag">电力市场</span><span class="industry-tag">需求响应</span><span class="industry-tag">聚合平台</span>
-      </div>
-    </div>
-  </div>
-</div>
-
-</div>
-
-<div class="footer">
-  <div class="brand">SSR思锐咨询™️</div>
-  <div class="footer-sub">SUPER SUCCESS RESULTS</div>
-  <p class="footer-slogan">1000+上岸学员｜200+名企在职团队｜校招全流程求职陪跑</p>
-  <p>以上导师信息均基于真实从业背景整理，旨在为求职者提供专业、可信的行业指导</p>
-  <p style="margin-top:6px;color:#94a3b8;">© 2026 SSR思锐咨询™️ · 为你精准匹配职业未来</p>
-</div>
-
-<script>
-  document.querySelectorAll('.nav-tab').forEach(tab => {
-    tab.addEventListener('click', () => {
-      document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
-      tab.classList.add('active');
-      const category = tab.dataset.section;
-      document.querySelectorAll('.section').forEach(section => {
-        section.style.display = (category === 'all' || section.dataset.category === category) ? '' : 'none';
-      });
-    });
-  });
-</script>
-
+    <script>
+        // FAQ Accordion
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', () => {
+                const item = question.parentElement;
+                const isActive = item.classList.contains('active');
+                
+                document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('active'));
+                
+                if (!isActive) {
+                    item.classList.add('active');
+                }
+            });
+        });
+    </script>
 </body>
 </html>
